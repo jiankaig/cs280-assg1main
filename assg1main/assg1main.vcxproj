@@ -91,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\code</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,8 +105,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\code</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +154,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="assg1main.cpp" />
+    <ClCompile Include="F:\SIT SEEMS\2021 Fall\CS280\cs280-a1-oa\code\ObjectAllocator.cpp" />
+    <ClCompile Include="F:\SIT SEEMS\2021 Fall\CS280\cs280-a1-oa\code\PRNG.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="F:\SIT SEEMS\2021 Fall\CS280\cs280-a1-oa\code\ObjectAllocator.h" />
+    <ClInclude Include="F:\SIT SEEMS\2021 Fall\CS280\cs280-a1-oa\code\PRNG.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
