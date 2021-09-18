@@ -2094,7 +2094,7 @@ int main(int argc, char** argv)
 #endif
 
     int test=0;
-    //std::cin >> test;
+    std::cin >> test;
     if (argc > 1)
         test = std::atoi(argv[1]);
     if (argc > 2)

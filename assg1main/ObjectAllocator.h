@@ -263,9 +263,10 @@ class ObjectAllocator
       // Some "suggested" members (only a suggestion!)
     GenericObject *PageList_; //!< the beginning of the list of pages
     GenericObject *FreeList_; //!< the beginning of the list of objects
-	GenericObject *FirstPage_;
     
     // Lots of other private stuff... 
+    const OAConfig& config_;
+    OAStats* stats_;
 };
 
 #endif
