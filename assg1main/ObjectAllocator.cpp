@@ -76,11 +76,13 @@ void ObjectAllocator::Free(void *Object){
 
 // Calls the callback fn for each block still in use
 unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
+	fn(nullptr, 16);
 	return (unsigned)1;
 }
 
 // Calls the callback fn for each block that is potentially corrupted
 unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
+	fn(nullptr, 16);
 	return 1;
 }
 
@@ -92,12 +94,13 @@ unsigned ObjectAllocator::FreeEmptyPages(){
 // Testing/Debugging/Statistic methods
 // true=enable, false=disable
 void ObjectAllocator::SetDebugState(bool State){
-	
+	if(State){
+
+	}
 }
 
 // returns a pointer to the internal free list
 const void* ObjectAllocator::GetFreeList() const{
-	
 	return nullptr;
 }
 
