@@ -977,6 +977,7 @@ void DoStudents(unsigned padding, bool printall)
         if (printall)
             DumpPages(studentObjectMgr, wrap);
         pStudent2 = static_cast<Student*>(studentObjectMgr->Allocate());
+        cout<<"BREAKPOINT\n";
         PrintCounts(studentObjectMgr);
         if (printall)
             DumpPages(studentObjectMgr, wrap);
