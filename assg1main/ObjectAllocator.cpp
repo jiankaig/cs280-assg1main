@@ -3,10 +3,10 @@
 // Creates the ObjectManager per the specified values
 // Throws an exception if the construction fails. (Memory allocation problem)
 ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
-: config_(config)
+: config_(config), stats_(nullptr)
 {
-	stats_->ObjectSize_ = ObjectSize;
-	stats_->PageSize_ = 4 + 4 * ObjectSize;
+	//stats_->ObjectSize_ = ObjectSize;
+	stats_->PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize;
 	//unsigned x = config.MaxPages_;
 	//unsigned y = config.ObjectsPerPage_;
 	
@@ -116,6 +116,7 @@ OAConfig ObjectAllocator::GetConfig() const{
  
 // returns the statistics for the allocator 
 OAStats ObjectAllocator::GetStats() const{
-	return *stats_;
+	OAStats stats;
+	return stats;
 }         
 
