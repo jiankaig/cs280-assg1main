@@ -66,75 +66,75 @@ ObjectAllocator::~ObjectAllocator(){
 // Take an object from the free list and give it to the client (simulates new)
 // Throws an exception if the object can't be allocated. (Memory allocation problem)
 void* ObjectAllocator::Allocate(const char *label) {
+	//std::cout<<"FreeObjects: "<<stats_->FreeObjects_<<std::endl;
 	if(stats_->FreeObjects_ > 0){
 		//update acounting info
 		stats_->ObjectsInUse_ += 1;
 		stats_->FreeObjects_ -= 1;
 		stats_->Allocations_ += 1;
-
+		if(stats_->Allocations_ > stats_->MostObjects_ )
+			stats_->MostObjects_ = stats_->Allocations_;
 		// Remove first object from free list for client
 		label = reinterpret_cast<char*>(FreeList_);
 		FreeList_ = FreeList_->Next;
 
 	}
-	else if (stats_->FreeObjects_ == 0){
+	else if (stats_->FreeObjects_ == 0 && stats_->PagesInUse_ < config_.MaxPages_){
 		//check page limit before adding new page
-		if(stats_->PagesInUse_ < config_.MaxPages_){
-			//create another page and link to preivous page
-			NewPage = new char[stats_->PageSize_];
-			GenericObject* oldPage = PageList_;
-			PageList_ = reinterpret_cast<GenericObject* >(NewPage);
-			PageList_->Next = oldPage;
-			oldPage = NULL;
+		//create another page and link to preivous page
+		NewPage = new char[stats_->PageSize_];
+		GenericObject* oldPage = PageList_;
+		PageList_ = reinterpret_cast<GenericObject* >(NewPage);
+		PageList_->Next = oldPage;
+		oldPage = NULL;
 
-			//2. Casting the page to a GenericObject* and adjusting pointers.
-			PageList_ = reinterpret_cast<GenericObject* >(NewPage);
-			PageList_->Next = NULL;
-			stats_->PagesInUse_ += 1;//update acounting info
-			stats_->FreeObjects_ += config_.ObjectsPerPage_;//update acounting info
+		//2. Casting the page to a GenericObject* and adjusting pointers.
+		PageList_ = reinterpret_cast<GenericObject* >(NewPage);
+		PageList_->Next = NULL;
+		stats_->PagesInUse_ += 1;//update acounting info
+		stats_->FreeObjects_ += config_.ObjectsPerPage_;//update acounting info
 
-			//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
-			FreeList_ = reinterpret_cast<GenericObject*>(NewPage+sizeof(size_t));
-			FreeList_->Next = NULL;
+		//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
+		FreeList_ = reinterpret_cast<GenericObject*>(NewPage+sizeof(size_t));
+		FreeList_->Next = NULL;
 
-			//4. Casting the 2nd 16-byte block to GenericObject* and putting on free list
-			GenericObject* currentObj;
-			char* NextObj;
-			currentObj = FreeList_;
-			NextObj = reinterpret_cast<char* >(FreeList_ + stats_->ObjectSize_); 
-			FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
-			FreeList_->Next = currentObj;
-			currentObj = NULL;
-			NextObj = NULL;
+		//4. Casting the 2nd 16-byte block to GenericObject* and putting on free list
+		GenericObject* currentObj;
+		char* NextObj;
+		currentObj = FreeList_;
+		NextObj = reinterpret_cast<char* >(FreeList_ + stats_->ObjectSize_); 
+		FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
+		FreeList_->Next = currentObj;
+		currentObj = NULL;
+		NextObj = NULL;
 
-			//5. Do the same for the 3rd and 4th blocks
-			currentObj = FreeList_;
-			NextObj = reinterpret_cast<char* >(FreeList_ + stats_->ObjectSize_); 
-			FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
-			FreeList_->Next = currentObj;
-			currentObj = NULL;
-			NextObj = NULL;
+		//5. Do the same for the 3rd and 4th blocks
+		currentObj = FreeList_;
+		NextObj = reinterpret_cast<char* >(FreeList_ + stats_->ObjectSize_); 
+		FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
+		FreeList_->Next = currentObj;
+		currentObj = NULL;
+		NextObj = NULL;
 
-			currentObj = FreeList_;
-			NextObj = reinterpret_cast<char* >(FreeList_ + stats_->ObjectSize_); 
-			FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
-			FreeList_->Next = currentObj;
-			currentObj = NULL;
-			NextObj = NULL;
+		currentObj = FreeList_;
+		NextObj = reinterpret_cast<char* >(FreeList_ + stats_->ObjectSize_); 
+		FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
+		FreeList_->Next = currentObj;
+		currentObj = NULL;
+		NextObj = NULL;
 
-			// Remove first object from free list for client
-			label = reinterpret_cast<char*>(FreeList_);
-			FreeList_ = FreeList_->Next;
+		// Remove first object from free list for client
+		label = reinterpret_cast<char*>(FreeList_);
+		FreeList_ = FreeList_->Next;
 
-			//update acounting info
-			stats_->ObjectsInUse_ += 1;
-			stats_->FreeObjects_ -= 1;
-			stats_->Allocations_ += 1;
-		
-		}
+		//update acounting info
+		stats_->ObjectsInUse_ += 1;
+		stats_->FreeObjects_ -= 1;
+		stats_->Allocations_ += 1;
+		if(stats_->Allocations_ > stats_->MostObjects_ )
+			stats_->MostObjects_ = stats_->Allocations_;
 	}
 	else{
-		std::cout<<"come here\n";
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
 
@@ -148,6 +148,11 @@ void ObjectAllocator::Free(void *Object){
 	FreeList_ =reinterpret_cast<GenericObject* >(Object);
 	FreeList_->Next = temp;
 	temp = NULL;
+
+	//update acounting info
+	stats_->ObjectsInUse_ -= 1;
+	stats_->FreeObjects_ += 1;
+	stats_->Deallocations_ += 1;
 }
 
 
