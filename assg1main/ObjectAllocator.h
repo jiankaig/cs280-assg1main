@@ -267,6 +267,7 @@ class ObjectAllocator
     // Lots of other private stuff... 
     const OAConfig& config_;
     OAStats* stats_;
+    OAException* OAException_;
 };
 
 #endif
