@@ -268,6 +268,8 @@ class ObjectAllocator
     const OAConfig& config_;
     OAStats* stats_;
     OAException* OAException_;
+
+    char* NewPage;
 };
 
 #endif

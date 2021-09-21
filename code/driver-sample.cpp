@@ -1002,6 +1002,7 @@ void DoStudents(unsigned padding, bool printall)
     {
         try
         {
+        //cout<<i<<" BREAKPOINT \n";
             pStudent4[i] = static_cast<Student*>(studentObjectMgr->Allocate());
             if (pStudent4[i] == 0)
                 break;
@@ -1022,7 +1023,6 @@ void DoStudents(unsigned padding, bool printall)
 
     }
     PrintCounts(studentObjectMgr);
-        cout<<"BREAKPOINT\n";
     if (printall)
         DumpPages(studentObjectMgr, wrap);
 
