@@ -32,7 +32,7 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 		//4. Casting the 2nd 16-byte block to GenericObject* and putting on free list
 		GenericObject* currentObj;
 		char* NextObj;
-		currentObj = FreeList_;//replace with sizeof() or ObjectSize
+		currentObj = FreeList_;
 		NextObj = reinterpret_cast<char* >(FreeList_ + ObjectSize); 
 		FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
 		FreeList_->Next = currentObj;
@@ -40,14 +40,14 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 		NextObj = NULL;
 
 		//5. Do the same for the 3rd and 4th blocks
-		currentObj = FreeList_;//replace with sizeof() or ObjectSize
+		currentObj = FreeList_;
 		NextObj = reinterpret_cast<char* >(FreeList_ + ObjectSize); 
 		FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
 		FreeList_->Next = currentObj;
 		currentObj = NULL;
 		NextObj = NULL;
 
-		currentObj = FreeList_;//replace with sizeof() or ObjectSize
+		currentObj = FreeList_;
 		NextObj = reinterpret_cast<char* >(FreeList_ + ObjectSize); 
 		FreeList_ = reinterpret_cast<GenericObject* >(NextObj);
 		FreeList_->Next = currentObj;
@@ -78,8 +78,9 @@ void* ObjectAllocator::Allocate(const char *label) {
 	FreeList_ = FreeList_->Next;
 
 	}
-	else{
-		//std::cout<<"throw custom exception\n";
+	else if (stats_->FreeObjects_ == 0){
+		//create another page
+
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
 	
