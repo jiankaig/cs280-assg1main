@@ -214,7 +214,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
 
-	return (void*)NewObject;
+	return reinterpret_cast<void*>(NewObject);
 }
 
 // Returns an object to the free list for the client (simulates delete)
@@ -271,7 +271,23 @@ void ObjectAllocator::Free(void *Object){
 	}
 
 	//check left and right pad bytes for pad pattern
-
+	if(config_.PadBytes_ != 0){
+		char* leftPadStart = reinterpret_cast<char*>(Object) - config_.PadBytes_;
+		char* rightPadStart = reinterpret_cast<char*>(Object) + stats_->ObjectSize_;
+		
+		int count = config_.PadBytes_;
+		while(count!=0){
+			if(*leftPadStart%0xFFFFFF00 !=PAD_PATTERN){
+				throw OAException(OAException::E_CORRUPTED_BLOCK,"corruption on left");
+			}
+			if(*rightPadStart%0xFFFFFF00 != PAD_PATTERN){
+				throw OAException(OAException::E_CORRUPTED_BLOCK,"corruption on right");
+			}
+			count--;
+		}
+		
+	}
+	
 
 
 	//Free Object if no issues

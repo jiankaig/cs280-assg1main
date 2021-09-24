@@ -1,7 +1,4 @@
-416a417,418
-> Exception thrown from Free: E_CORRUPTED_BLOCK on left
-> Exception thrown from Free: E_CORRUPTED_BLOCK on right
-425,432c427,432
+427,434c427,432
 < Exception thrown from Allocate (2) in DisableOA.
 < Allocs: 8, Frees: 0
 < Allocs: 8, Frees: 1
@@ -17,12 +14,12 @@
 > Allocs: 9, Frees: 3
 > Allocs: 9, Frees: 9
 > Most students in use: 9
-439,440c439
+441,442c439
 < Exception thrown from Free in TestLeak.
 < Pages in use: 8, Objects in use: 30, Available objects: 2, Allocs: 32, Frees: 2
 ---
 > Pages in use: 8, Objects in use: 16, Available objects: 16, Allocs: 32, Frees: 16
-446,448c445,477
+448,450c445,477
 < Block at 0x00000000, 16 bytes long.
 < Object dump complete. [1]
 < Exception thrown from Free (2) in TestLeak.
@@ -60,26 +57,26 @@
 > Block at 0x00000000, 40 bytes long.
 >  Data: <        Tufnel  > BB BB BB BB BB BB BB BB 54 75 66 6E 65 6C 00 BB
 > Object dump complete. [16]
-451,454c480
+453,456c480
 < Detected memory leaks!
 < Dumping objects ->
 < Block at 0x00000000, 16 bytes long.
 < Object dump complete. [1]
 ---
 > No leaks detected.
-478,479c504
+480,481c504
 < Block at 0x00000000, 16 bytes long.
 < Number of corruptions: 1
 ---
 > Number of corruptions: 0
-500,501c525,527
+502,503c525,527
 < Block at 0x00000000, 16 bytes long.
 < Number of corruptions: 1
 ---
 > Block at 0x00000000, 24 bytes long.
 > Block at 0x00000000, 24 bytes long.
 > Number of corruptions: 2
-522,523c548,551
+524,525c548,551
 < Block at 0x00000000, 16 bytes long.
 < Number of corruptions: 1
 ---
@@ -87,7 +84,7 @@
 > Block at 0x00000000, 24 bytes long.
 > Block at 0x00000000, 24 bytes long.
 > Number of corruptions: 3
-526a555,572
+528a555,572
 > Object size = 24, Page size = 29008, Pad bytes = 0, ObjectsPerPage = 1000, MaxPages = 10, MaxObjects = 10000
 > Alignment = 0, LeftAlign = 0, InterAlign = 0, HeaderBlocks = Basic, Header size = 5
 > Pages in use: 10, Objects in use: 10000, Available objects: 0, Allocs: 10000, Frees: 0
