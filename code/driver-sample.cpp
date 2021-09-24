@@ -963,7 +963,6 @@ void DoStudents(unsigned padding, bool printall)
     {
         cout << "Unexpected exception thrown from constructor in DoStudents." << endl;
     }
-
     unsigned wrap = 32;
     PrintConfig(studentObjectMgr);
     PrintCounts(studentObjectMgr);
@@ -996,6 +995,7 @@ void DoStudents(unsigned padding, bool printall)
     {
         cout << "Unexpected exception thrown from Allocate in DoStudents." << endl;
     }
+    //SHOWREAL = true;//my debugging
 
     Student* pStudent4[6];
     for (int i = 0; i < 6; i++)
@@ -1105,6 +1105,9 @@ void DoEmployees(void)
         PrintCounts(employeeObjectMgr);
         pEmployee3 = static_cast<Employee*>(employeeObjectMgr->Allocate());
         PrintCounts(employeeObjectMgr);
+        //printf("employee1(printf): %p\n", reinterpret_cast<void*>(pEmployee1));
+        //printf("employee2(printf): %p\n", reinterpret_cast<void*>(pEmployee2));
+        //printf("employee3(printf): %p\n", reinterpret_cast<void*>(pEmployee3));
     }
     catch (const OAException& e)
     {
@@ -1146,9 +1149,9 @@ void DoEmployees(void)
     }
     // ************************* blindly pushes ecx as if it still has &empObjMgr
     PrintCounts(employeeObjectMgr);
-
     try
     {
+    //SHOW_EXCEPTIONS = true;
         employeeObjectMgr->Free(pEmployee1);
         PrintCounts(employeeObjectMgr);
         employeeObjectMgr->Free(pEmployee2);
@@ -1188,6 +1191,8 @@ void DoEmployees(void)
     try
     {
         employeeObjectMgr->Free(reinterpret_cast<char*>(pEmployee4[0] + 4));
+        // char* debugRef = reinterpret_cast<char*>(pEmployee4[0] + 4);
+        // cout<<"debugRef: "<<&debugRef<<"\t"<<&pEmployee4[0]<<endl;
     }
     catch (const OAException& e)
     {
@@ -1807,7 +1812,6 @@ void DumpPages(const ObjectAllocator* nm, unsigned width)
                 printf(" %02X", *pages++);
             }
         }
-
         // Dump each object and its associated info
         for (unsigned int i = 0; i < nm->GetConfig().ObjectsPerPage_; i++)
         {
@@ -1847,6 +1851,7 @@ void DumpPages(const ObjectAllocator* nm, unsigned width)
                 printf(" %02X", *pages++);
             }
 
+        //cout<<"(";
             // possible next pointer (zero it out)
             for (unsigned j = 0; j < sizeof(void*); count++, pages++, j++)
             {
@@ -1860,6 +1865,7 @@ void DumpPages(const ObjectAllocator* nm, unsigned width)
                 else
                     printf(" %s", "XX");
             }
+        //cout<<"|";
 
             // remaining bytes
             for (unsigned j = 0; j < nm->GetStats().ObjectSize_ - sizeof(void*); count++, j++)
@@ -1871,6 +1877,7 @@ void DumpPages(const ObjectAllocator* nm, unsigned width)
                 }
                 printf(" %02X", *pages++);
             }
+        // cout<<")";
 
             // right pad bytes
             for (unsigned j = 0; j < nm->GetConfig().PadBytes_; count++, j++)

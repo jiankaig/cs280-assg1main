@@ -4,6 +4,7 @@
 //---------------------------------------------------------------------------
 
 #include <string>
+#include <cstring>
 
 // If the client doesn't specify these:
 static const int DEFAULT_OBJECTS_PER_PAGE = 4;  
@@ -270,6 +271,10 @@ class ObjectAllocator
     OAException* OAException_;
 
     char* NewPage;
+    char* NewObject;
+    GenericObject* ObjectList;//point to.. any block/object
+
+    void CreateAPage();
 };
 
 #endif
