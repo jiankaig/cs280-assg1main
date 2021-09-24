@@ -118,7 +118,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
 			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
 			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
-			//*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
+			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
 		}
 		else{
 			ptrToAllocNum = ptrToHeaderBlock;
@@ -142,7 +142,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
 			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
 			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
-			//*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
+			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
 		}
 		else{
 			ptrToAllocNum = ptrToHeaderBlock;
@@ -232,7 +232,6 @@ void ObjectAllocator::Free(void *Object){
 		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
 			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
 			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
-			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
 			BytesInBasicBlock = config_.HBlockInfo_.size_-config_.HBlockInfo_.additional_-2;
 		}
 		else{

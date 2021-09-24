@@ -713,14 +713,14 @@ void TestExtendedHeaderBlocks(unsigned size)
     {
         cout << "Unexpected exception thrown from Allocate in TestExtendedHeaderBlocks." << endl;
     }
-
+    //SHOWREAL = true;
     DumpPages(oa, wrap);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
     try
     {
-        oa->Free(pStudent1);
+        oa->Free(pStudent1);//<<<<<<issue
     }
     catch (const OAException& e)
     {
