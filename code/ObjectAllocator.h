@@ -224,7 +224,6 @@ class ObjectAllocator
     static const unsigned char FREED_PATTERN =       0xCC; //!< Memory returned by the client
     static const unsigned char PAD_PATTERN =         0xDD; //!< Pad signature to detect buffer over/under flow
     static const unsigned char ALIGN_PATTERN =       0xEE; //!< For the alignment bytes
-    static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
 
       // Creates the ObjectManager per the specified values
       // Throws an exception if the construction fails. (Memory allocation problem)
@@ -276,6 +275,7 @@ class ObjectAllocator
     GenericObject* ObjectList;//point to.. any block/object
 
     void CreateAPage();
+    void * my_strpy (void *dest, const void *src) __attribute__((nonnull));
 
     long unsigned int AllocNum = 0;
     char* ptrToHeaderBlock = NULL;
@@ -283,6 +283,7 @@ class ObjectAllocator
     char* ptrToAllocNum = NULL;
     char* ptrToFlag = NULL;
 
+    static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
 };
 
 #endif

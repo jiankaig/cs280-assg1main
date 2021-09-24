@@ -829,7 +829,7 @@ void TestExternalHeaderBlocks()
 {
     ObjectAllocator* oa = 0;
     unsigned wrap = 32;
-
+//SHOWREAL=true;
     try
     {
         bool newdel = false;

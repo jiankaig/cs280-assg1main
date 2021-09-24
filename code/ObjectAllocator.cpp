@@ -70,6 +70,11 @@ void ObjectAllocator::CreateAPage(){
 	}
 }
 
+void * my_strpy (void *dest, const void *src){
+	dest = strcpy(reinterpret_cast<char*>(dest), reinterpret_cast<const char*>(src));
+	return dest;
+}
+
 // Creates the ObjectManager per the specified values
 // Throws an exception if the construction fails. (Memory allocation problem)
 ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
@@ -100,55 +105,102 @@ ObjectAllocator::~ObjectAllocator(){
 // Take an object from the free list and give it to the client (simulates new)
 // Throws an exception if the object can't be allocated. (Memory allocation problem)
 void* ObjectAllocator::Allocate(const char *label) {
-	//std::cout<<"FreeObjects: "<<stats_->FreeObjects_<<std::endl;
 	
 	if(stats_->FreeObjects_ > 0){
+		
+		// Remove first object from free list for client
+		NewObject = reinterpret_cast<char*>(FreeList_);
+		FreeList_ = FreeList_->Next;
+		
+		// Process assignment to header block
+		AllocNum +=1;
+		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		// Check header block type then assigning pointers
+		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
+			// Assign Extended header
+			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
+			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
+			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1); // increment use count
+
+			memset(ptrToAllocNum, static_cast<int>(AllocNum), 1); // set memory signature
+			memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
+		}
+		else if(config_.HBlockInfo_.type_ == OAConfig::hbExternal){
+			// allocate External header
+			MemBlockInfo* ptrHbExternal = NULL;
+			try{
+				ptrHbExternal = new MemBlockInfo();
+			}
+			catch(std::bad_alloc &){
+				throw OAException(OAException::E_NO_MEMORY, 
+									std::string("No Memory, allocation failed for external header"));
+			}
+			ptrHbExternal->in_use = true;
+			ptrHbExternal->label = const_cast<char *>(label);
+			ptrHbExternal->alloc_num = static_cast<unsigned int>(AllocNum);
+			*(reinterpret_cast<MemBlockInfo **>(ptrToHeaderBlock)) = ptrHbExternal;
+		}
+		else if(config_.HBlockInfo_.type_ == OAConfig::hbBasic){
+			// Assign Basic header
+			ptrToAllocNum = ptrToHeaderBlock;
+			memset(ptrToAllocNum, static_cast<int>(AllocNum), 1); // set memory signature
+			memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
+		}
+		
+		//process byte pattern for Object space as "allocated"
+		memset(NewObject, ALLOCATED_PATTERN, stats_->ObjectSize_);
+
 		//update acounting info
 		stats_->ObjectsInUse_ += 1;
 		stats_->FreeObjects_ -= 1;
 		stats_->Allocations_ += 1;
 		if(stats_->Allocations_ > stats_->MostObjects_ )
 			stats_->MostObjects_ = stats_->Allocations_;
-		// Remove first object from free list for client
-		NewObject = reinterpret_cast<char*>(FreeList_);
-		label = NewObject;
-		FreeList_ = FreeList_->Next;
-		AllocNum +=1;
-		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
-		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
-			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
-			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
-			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
-		}
-		else{
-			ptrToAllocNum = ptrToHeaderBlock;
-		}
-		memset(ptrToAllocNum, static_cast<int>(AllocNum), 1);
-		memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
-		memset(NewObject, ALLOCATED_PATTERN, stats_->ObjectSize_);
 
 	}
 	else if (stats_->FreeObjects_ == 0 && stats_->PagesInUse_ < config_.MaxPages_){
 		//check page limit before adding new page
-		//create another page and link to preivous page
-		CreateAPage();
+		CreateAPage(); // create another page and link to preivous page
 
 		// Remove first object from free list for client
 		NewObject = reinterpret_cast<char*>(FreeList_);
 		label = NewObject;
 		FreeList_ = FreeList_->Next;
+
+		// Process assignment to header block
 		AllocNum +=1;
 		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		// Check header block type then assigning pointers
 		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
 			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
 			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
-			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
+			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1); // increment use count
+
+			memset(ptrToAllocNum, static_cast<int>(AllocNum), 1); // set memory signature
+			memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
 		}
-		else{
+		else if(config_.HBlockInfo_.type_ == OAConfig::hbExternal){
+			// allocate external header
+			MemBlockInfo* ptrHbExternal = NULL;
+			try{
+				ptrHbExternal = new MemBlockInfo();
+			}
+			catch(std::bad_alloc &){
+				throw OAException(OAException::E_NO_MEMORY, 
+									std::string("No Memory, allocation failed for external header"));
+			}
+			ptrHbExternal->in_use = true;
+			ptrHbExternal->label = const_cast<char *>(label);
+			ptrHbExternal->alloc_num = static_cast<unsigned int>(AllocNum);
+			*(reinterpret_cast<MemBlockInfo **>(ptrToHeaderBlock)) = ptrHbExternal;
+		}
+		else if(config_.HBlockInfo_.type_ == OAConfig::hbBasic){
 			ptrToAllocNum = ptrToHeaderBlock;
+			memset(ptrToAllocNum, static_cast<int>(AllocNum), 1); // set memory signature
+			memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
 		}
-		memset(ptrToAllocNum,  static_cast<int>(AllocNum), 1);
-		memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
+
+		//process byte pattern for Object space as "allocated"
 		memset(NewObject, ALLOCATED_PATTERN, stats_->ObjectSize_);
 
 		//update acounting info
@@ -162,7 +214,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
 
-	return (void*)label;
+	return (void*)NewObject;
 }
 
 // Returns an object to the free list for the client (simulates delete)
@@ -217,6 +269,9 @@ void ObjectAllocator::Free(void *Object){
 		//std::cout<<"MIS ALIGN!!!!!!!!!\n";
 		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. mis-alignment ");
 	}
+
+	//check left and right pad bytes for pad pattern
+
 
 
 	//Free Object if no issues
