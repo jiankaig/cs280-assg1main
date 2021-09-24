@@ -3,7 +3,7 @@
 void ObjectAllocator::CreateAPage(){
 	try{
 		//1. Request memory for first page
-		NewPage = new char[stats_->PageSize_];	
+		NewPage = new char[stats_->PageSize_];
 		GenericObject* oldPage = PageList_;
 		//2. Casting the page to a GenericObject* and adjusting pointers.
 		PageList_ = reinterpret_cast<GenericObject* >(NewPage);
@@ -15,7 +15,8 @@ void ObjectAllocator::CreateAPage(){
 		//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
 		GenericObject* currentObj;
 		currentObj = FreeList_;
-		NewObject = NewPage + sizeof(size_t) + config_.PadBytes_; // point after page's Next
+		NewObject = NewPage + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; // point after page's Next
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 		memset(NewObject, UNALLOCATED_PATTERN, stats_->ObjectSize_);
 		memset(NewObject+stats_->ObjectSize_, PAD_PATTERN, config_.PadBytes_);
@@ -28,7 +29,8 @@ void ObjectAllocator::CreateAPage(){
 
 		currentObj = FreeList_;
 		NewObject = reinterpret_cast<char* >(FreeList_); 
-		NewObject = NewObject + stats_->ObjectSize_ + config_.PadBytes_*2;
+		NewObject = NewObject + stats_->ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 		memset(NewObject, UNALLOCATED_PATTERN, stats_->ObjectSize_);
 		memset(NewObject+stats_->ObjectSize_, PAD_PATTERN, config_.PadBytes_);
@@ -40,7 +42,8 @@ void ObjectAllocator::CreateAPage(){
 		//5. Do the same for the 3rd and 4th blocks
 		currentObj = FreeList_;
 		NewObject = reinterpret_cast<char* >(FreeList_);
-		NewObject = NewObject + stats_->ObjectSize_ + config_.PadBytes_*2; 
+		NewObject = NewObject + stats_->ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_; 
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 		memset(NewObject, UNALLOCATED_PATTERN, stats_->ObjectSize_);
 		memset(NewObject+stats_->ObjectSize_, PAD_PATTERN, config_.PadBytes_);
@@ -51,7 +54,8 @@ void ObjectAllocator::CreateAPage(){
 
 		currentObj = FreeList_;
 		NewObject = reinterpret_cast<char* >(FreeList_);
-		NewObject = NewObject + stats_->ObjectSize_ + config_.PadBytes_*2; 
+		NewObject = NewObject + stats_->ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 		memset(NewObject, UNALLOCATED_PATTERN, stats_->ObjectSize_);
 		memset(NewObject+stats_->ObjectSize_, PAD_PATTERN, config_.PadBytes_);
@@ -74,7 +78,8 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	stats_ = new OAStats();
 	stats_->ObjectSize_ = ObjectSize;
 	stats_->PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
-		+ config_.PadBytes_ * 2 * config_.ObjectsPerPage_;
+		+ config_.PadBytes_ * 2 * config_.ObjectsPerPage_
+		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_);
 	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
 	
 	CreateAPage();
@@ -96,6 +101,7 @@ ObjectAllocator::~ObjectAllocator(){
 // Throws an exception if the object can't be allocated. (Memory allocation problem)
 void* ObjectAllocator::Allocate(const char *label) {
 	//std::cout<<"FreeObjects: "<<stats_->FreeObjects_<<std::endl;
+	
 	if(stats_->FreeObjects_ > 0){
 		//update acounting info
 		stats_->ObjectsInUse_ += 1;
@@ -107,6 +113,18 @@ void* ObjectAllocator::Allocate(const char *label) {
 		NewObject = reinterpret_cast<char*>(FreeList_);
 		label = NewObject;
 		FreeList_ = FreeList_->Next;
+		AllocNum +=1;
+		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
+			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
+			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
+			//*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
+		}
+		else{
+			ptrToAllocNum = ptrToHeaderBlock;
+		}
+		memset(ptrToAllocNum, static_cast<int>(AllocNum), 1);
+		memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
 		memset(NewObject, ALLOCATED_PATTERN, stats_->ObjectSize_);
 
 	}
@@ -119,6 +137,18 @@ void* ObjectAllocator::Allocate(const char *label) {
 		NewObject = reinterpret_cast<char*>(FreeList_);
 		label = NewObject;
 		FreeList_ = FreeList_->Next;
+		AllocNum +=1;
+		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
+			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
+			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
+			//*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
+		}
+		else{
+			ptrToAllocNum = ptrToHeaderBlock;
+		}
+		memset(ptrToAllocNum,  static_cast<int>(AllocNum), 1);
+		memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
 		memset(NewObject, ALLOCATED_PATTERN, stats_->ObjectSize_);
 
 		//update acounting info
@@ -179,7 +209,7 @@ void ObjectAllocator::Free(void *Object){
 
 	//check if object is aligned and base case
 	size_t ObjectPosition = (size_t)Object - (size_t)lowerBoundary;
-	bool isAligned = ((ObjectPosition-8-config_.PadBytes_)  % (stats_->ObjectSize_+2*config_.PadBytes_))  == 0;
+	bool isAligned = ((ObjectPosition-8-config_.PadBytes_-config_.HBlockInfo_.size_)  % (stats_->ObjectSize_+2*config_.PadBytes_+config_.HBlockInfo_.size_))  == 0;
 	bool baseCase = ObjectPosition == stats_->PageSize_; //special case
 	//printf("L:%p | U:%p | O:%p\n",lowerBoundary, upperBoundary, Object);
 	//printf("objectpos: %lu\n", ObjectPosition);
@@ -195,7 +225,21 @@ void ObjectAllocator::Free(void *Object){
 		//delete [] block;
 		//std::cout<<"freeing obejct\n";
 		GenericObject* temp = FreeList_;
-		FreeList_ =reinterpret_cast<GenericObject* >(Object);
+		FreeList_ = reinterpret_cast<GenericObject* >(Object);
+		//std::cout<<"FRREEDD";
+		ptrToHeaderBlock = reinterpret_cast<char* >(Object)-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		size_t BytesInBasicBlock;
+		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
+			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
+			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
+			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1);
+			BytesInBasicBlock = config_.HBlockInfo_.size_-config_.HBlockInfo_.additional_-2;
+		}
+		else{
+			ptrToAllocNum = ptrToHeaderBlock;
+			BytesInBasicBlock = config_.HBlockInfo_.size_;
+		}
+		memset(ptrToAllocNum, ZERO_PATTERN, BytesInBasicBlock);
 		memset(FreeList_, FREED_PATTERN, stats_->ObjectSize_);
 		FreeList_->Next = temp;
 		temp = NULL;
