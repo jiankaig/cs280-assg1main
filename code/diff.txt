@@ -1,28 +1,11 @@
-427,434c427,432
-< Exception thrown from Allocate (2) in DisableOA.
-< Allocs: 8, Frees: 0
-< Allocs: 8, Frees: 1
-< Allocs: 8, Frees: 2
-< Allocs: 8, Frees: 3
-< Exception thrown from Free in DisableOA.
-< Allocs: 8, Frees: 4
-< Most students in use: 8
----
-> Allocs: 9, Frees: 0
-> Allocs: 9, Frees: 1
-> Allocs: 9, Frees: 2
-> Allocs: 9, Frees: 3
-> Allocs: 9, Frees: 9
-> Most students in use: 9
-441,442c439
+439,440c439
 < Exception thrown from Free in TestLeak.
 < Pages in use: 8, Objects in use: 30, Available objects: 2, Allocs: 32, Frees: 2
 ---
 > Pages in use: 8, Objects in use: 16, Available objects: 16, Allocs: 32, Frees: 16
-448,450c445,477
+446,447c445,572
 < Block at 0x00000000, 16 bytes long.
 < Object dump complete. [1]
-< Exception thrown from Free (2) in TestLeak.
 ---
 > Block at 0x00000000, 40 bytes long.
 >  Data: <        Eton-Hog> BB BB BB BB BB BB BB BB 45 74 6F 6E 2D 48 6F 67
@@ -57,34 +40,83 @@
 > Block at 0x00000000, 40 bytes long.
 >  Data: <        Tufnel  > BB BB BB BB BB BB BB BB 54 75 66 6E 65 6C 00 BB
 > Object dump complete. [16]
-453,456c480
-< Detected memory leaks!
-< Dumping objects ->
-< Block at 0x00000000, 16 bytes long.
-< Object dump complete. [1]
----
+> 
+> Checking for leaks...
 > No leaks detected.
-480,481c504
-< Block at 0x00000000, 16 bytes long.
-< Number of corruptions: 1
----
+> 
+> ============================== Test validate...
+> Object size = 24, Page size = 188, Pad bytes = 8, ObjectsPerPage = 4, MaxPages = 2, MaxObjects = 8
+> Alignment = 0, LeftAlign = 0, InterAlign = 0, HeaderBlocks = Basic, Header size = 5
+> Pages in use: 2, Objects in use: 7, Available objects: 1, Allocs: 7, Frees: 0
+> XXXXXXXX
+>   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+>  XX XX XX XX XX XX XX XX 00 00 00 00 00 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX AA AA AA
+>  AA AA AA AA AA AA AA AA AA AA AA AA AA DD DD DD DD DD DD DD DD 07 00 00 00 01 DD DD DD DD DD DD
+>  DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD
+>  DD DD 06 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB
+>  BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 05 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX
+>  XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD
+> 
+> XXXXXXXX
+>   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+>  XX XX XX XX XX XX XX XX 04 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB
+>  BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 03 00 00 00 01 DD DD DD DD DD DD
+>  DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD
+>  DD DD 02 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB
+>  BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 01 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX
+>  XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD
+> 
 > Number of corruptions: 0
-502,503c525,527
-< Block at 0x00000000, 16 bytes long.
-< Number of corruptions: 1
----
+> 
+> Pages in use: 2, Objects in use: 7, Available objects: 1, Allocs: 7, Frees: 0
+> XXXXXXXX
+>   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+>  XX XX XX XX XX XX XX XX 00 00 00 00 00 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX AA AA AA
+>  AA AA AA AA AA AA AA AA AA AA AA AA AA DD DD DD DD DD DD DD DD 07 00 00 00 01 DD DD DD DD DD DD
+>  DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD
+>  DD DD 06 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB
+>  BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 05 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX
+>  XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD
+> 
+> XXXXXXXX
+>   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+>  XX XX XX XX XX XX XX XX 04 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB
+>  BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 03 00 00 00 01 DD DD DD DD DD DD
+>  DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD
+>  DD DD 02 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB
+>  BB BB BB BB BB BB BB EE EE EE EE EE EE DD DD 01 00 00 00 01 FF FF FF FF FF FF DD DD XX XX XX XX
+>  XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD
+> 
 > Block at 0x00000000, 24 bytes long.
 > Block at 0x00000000, 24 bytes long.
 > Number of corruptions: 2
-524,525c548,551
-< Block at 0x00000000, 16 bytes long.
-< Number of corruptions: 1
----
+> 
+> Pages in use: 2, Objects in use: 7, Available objects: 1, Allocs: 7, Frees: 0
+> XXXXXXXX
+>   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+>  XX XX XX XX XX XX XX XX 00 00 00 00 00 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX AA AA AA
+>  AA AA AA AA AA AA AA AA AA AA AA AA AA DD DD DD DD DD DD DD DD 07 00 00 00 01 FF FF FF FF FF FF
+>  DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB EE EE EE EE EE EE
+>  DD DD 06 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB
+>  BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 05 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX
+>  XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD
+> 
+> XXXXXXXX
+>   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+>  XX XX XX XX XX XX XX XX 04 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB
+>  BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD 03 00 00 00 01 DD DD DD DD DD DD
+>  DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD
+>  DD DD 02 00 00 00 01 DD DD DD DD DD DD DD DD XX XX XX XX XX XX XX XX BB BB BB BB BB BB BB BB BB
+>  BB BB BB BB BB BB BB EE EE EE EE EE EE DD DD 01 00 00 00 01 FF FF FF FF FF FF DD DD XX XX XX XX
+>  XX XX XX XX BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB DD DD DD DD DD DD DD DD
+> 
 > Block at 0x00000000, 24 bytes long.
 > Block at 0x00000000, 24 bytes long.
 > Block at 0x00000000, 24 bytes long.
 > Number of corruptions: 3
-528a555,572
+> 
+> 
+> ============================== Test free checking basic (stress)...
 > Object size = 24, Page size = 29008, Pad bytes = 0, ObjectsPerPage = 1000, MaxPages = 10, MaxObjects = 10000
 > Alignment = 0, LeftAlign = 0, InterAlign = 0, HeaderBlocks = Basic, Header size = 5
 > Pages in use: 10, Objects in use: 10000, Available objects: 0, Allocs: 10000, Frees: 0

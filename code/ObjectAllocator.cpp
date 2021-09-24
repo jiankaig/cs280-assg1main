@@ -70,16 +70,12 @@ void ObjectAllocator::CreateAPage(){
 	}
 }
 
-void * my_strpy (void *dest, const void *src){
-	dest = strcpy(reinterpret_cast<char*>(dest), reinterpret_cast<const char*>(src));
-	return dest;
-}
-
 // Creates the ObjectManager per the specified values
 // Throws an exception if the construction fails. (Memory allocation problem)
 ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 : config_(config), stats_(nullptr), OAException_(nullptr)
 {
+	
 	stats_ = new OAStats();
 	stats_->ObjectSize_ = ObjectSize;
 	stats_->PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
@@ -87,7 +83,10 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_);
 	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
 	
-	CreateAPage();
+	if(!config_.UseCPPMemManager_){
+		// create if not using standard new/delete
+		CreateAPage();
+	}
 
 }
 
@@ -105,7 +104,16 @@ ObjectAllocator::~ObjectAllocator(){
 // Take an object from the free list and give it to the client (simulates new)
 // Throws an exception if the object can't be allocated. (Memory allocation problem)
 void* ObjectAllocator::Allocate(const char *label) {
-	
+	if(config_.UseCPPMemManager_){
+		stats_->Allocations_ += 1;
+		size_t size = stats_->ObjectSize_;
+
+		if(stats_->Allocations_ > stats_->MostObjects_ )
+			stats_->MostObjects_ = stats_->Allocations_;
+			
+		return new char[size];
+	}
+
 	if(stats_->FreeObjects_ > 0){
 		
 		// Remove first object from free list for client
@@ -220,6 +228,12 @@ void* ObjectAllocator::Allocate(const char *label) {
 // Returns an object to the free list for the client (simulates delete)
 // Throws an exception if the the object can't be freed. (Invalid object)
 void ObjectAllocator::Free(void *Object){
+	if(config_.UseCPPMemManager_){
+		stats_->Deallocations_ += 1;
+		delete [] reinterpret_cast<char*>(Object);
+		return;
+	}
+
 	// //check for "double free"
 	bool bNoDoubleFree = true;
 	GenericObject* ptrFreeList = FreeList_;

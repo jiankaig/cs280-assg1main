@@ -275,7 +275,6 @@ class ObjectAllocator
     GenericObject* ObjectList;//point to.. any block/object
 
     void CreateAPage();
-    void * my_strpy (void *dest, const void *src) __attribute__((nonnull));
 
     long unsigned int AllocNum = 0;
     char* ptrToHeaderBlock = NULL;
