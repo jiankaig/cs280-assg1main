@@ -315,8 +315,7 @@ unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
 				in_use = false;
 			}
 			// go to next block
-			// ptrToBlock = ptrToBlock + stats_->ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
-			ptrToBlock = ptrToBlock + stats_.ObjectSize_+OAConfig::BASIC_HEADER_SIZE;// + config_.PadBytes_*2;
+			ptrToBlock = ptrToBlock + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
 			
 		}
 		page = page->Next;
