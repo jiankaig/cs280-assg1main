@@ -125,12 +125,8 @@ void* ObjectAllocator::Allocate(const char *label) {
 		
 		// Remove first object from free list for client
 		NewObject = reinterpret_cast<char*>(FreeList_);
-	// std::cout<<"BREAKPT1\n";
-		// printf("FreeList_: %p, FreeList_->Next: %p (in Allocate)\n", 
-		// 	reinterpret_cast<void*>(FreeList_), reinterpret_cast<void*>(FreeList_->Next));
 		FreeList_ = FreeList_->Next;
-		// printf("FreeList_: %p, FreeList_->Next: %p (in Allocate after)\n", 
-		// 	reinterpret_cast<void*>(FreeList_), reinterpret_cast<void*>(FreeList_->Next));
+
 		// Process assignment to header block
 		AllocNum +=1;
 		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
@@ -179,6 +175,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 	}
 	else if (stats_->FreeObjects_ == 0 && stats_->PagesInUse_ < config_.MaxPages_){
 		//check page limit before adding new page
+		//std::cout<<"create new page\n";
 		CreateAPage(); // create another page and link to preivous page
 
 		// Remove first object from free list for client
@@ -385,13 +382,61 @@ void ObjectAllocator::Free(void *Object){
 
 // Calls the callback fn for each block still in use
 unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
-	fn(nullptr, 16);
+	GenericObject* page = PageList_;//loop through each page in use
+	while(page){
+		//loop through each block in page
+		// char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; //firstblock
+		char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + OAConfig::BASIC_HEADER_SIZE; //firstblock
+		char* ptrToHeaderBlock;
+		for(int i=0;i<DEFAULT_OBJECTS_PER_PAGE;i++){
+			//check if block is in use
+			char* ptrToFlag; // find flag
+			bool in_use = false;
+			ptrToHeaderBlock = ptrToBlock - config_.PadBytes_ - config_.HBlockInfo_.size_;
+			// printf("%p\n", reinterpret_cast<void*>(ptrToHeaderBlock));
+			if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
+	// std::cout<<"BREAKPT\n"<<i;
+				ptrToFlag = ptrToHeaderBlock + 6 + config_.HBlockInfo_.additional_;
+				if(*ptrToFlag)
+					in_use = true;
+			}
+			else if(config_.HBlockInfo_.type_ == OAConfig::hbExternal){
+	// std::cout<<"BREAKPT2\n"<<i;
+				in_use = reinterpret_cast<MemBlockInfo*>(ptrToHeaderBlock)->in_use;
+			}
+			else if(config_.HBlockInfo_.type_ == OAConfig::hbBasic){
+	// std::cout<<"BREAKPT3\n"<<i;
+				ptrToFlag = ptrToHeaderBlock + 4;
+				if(*ptrToFlag)
+					in_use = true;
+			}
+			else{
+				//default case
+				ptrToFlag = ptrToBlock - 1;
+				//  printf("ptrToBlock: %p\n",(void*)ptrToBlock);
+				if(*ptrToFlag)
+					in_use = true;
+				ptrToFlag = NULL;
+			}
+			if(in_use) //if in use, callback fn
+			{
+				//  std::cout<<"callack\n";
+				fn(ptrToBlock, stats_->ObjectSize_);
+			}
+			// go to next block
+			// ptrToBlock = ptrToBlock + stats_->ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
+			ptrToBlock = ptrToBlock + stats_->ObjectSize_ + config_.PadBytes_*2;
+			
+		}
+		//printf("page: %p, %p",(void*)page, (void*)page->Next);
+		page = page->Next;
+	}
 	return (unsigned)1;
 }
 
 // Calls the callback fn for each block that is potentially corrupted
 unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
-	fn(nullptr, 16);
+	fn(nullptr, stats_->ObjectSize_);
 	return 1;
 }
 
