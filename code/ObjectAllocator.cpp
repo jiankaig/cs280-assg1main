@@ -382,17 +382,17 @@ ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) co
 		int count = config_.PadBytes_; // check each byte indiviually
 		while(count!=0){
 			if(static_cast<unsigned char>(*leftPadStart)!=PAD_PATTERN){
-				return true; //corruptioon found
+				return ObjectAllocator::CORRUPT_LEFT; //corruptioon found
 			}
 			if(static_cast<unsigned char>(*rightPadStart)!= PAD_PATTERN){
-				return true; //corruptioon found
+				return ObjectAllocator::CORRUPT_RIGHT; //corruptioon found
 			}
 			ptrToBlock = reinterpret_cast<char*>(ptrToBlock) +1;
 			count--;
 		}
 		
 	}
-	return false; // no corruption
+	return ObjectAllocator::NO_CORRUPT; // no corruption
 }
 
 int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const{

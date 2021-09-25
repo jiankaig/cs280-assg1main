@@ -202,7 +202,7 @@ void PrintArray(T* array, unsigned count)
 }
 
 const unsigned objects = 4096;
-const unsigned pages = 5; //100;
+const unsigned pages = 100;
 const unsigned total = objects * pages;
 void* ptrs[total];
 
