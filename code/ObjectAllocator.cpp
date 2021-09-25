@@ -1,6 +1,6 @@
 #include "ObjectAllocator.h"
 #include <iostream>//self-added
-void ObjectAllocator::CreateAPage(){
+char* ObjectAllocator::CreateAPage(){
 	try{
 		//1. Request memory for first page
 		NewPage = new char[stats_.PageSize_];
@@ -25,10 +25,8 @@ void ObjectAllocator::CreateAPage(){
 		FreeList_->Next = NULL;
 		currentObj = NULL;
 		NewObject = NULL;
-		// printf("FreeList_: %p, FreeList_->Next: %p (in CreateAPage)\n", 
-		// 	reinterpret_cast<void*>(FreeList_), reinterpret_cast<void*>(FreeList_->Next));
 
-
+		// cast remaining blocks
 		unsigned int countBlocks = config_.ObjectsPerPage_ - 1;
 		while(countBlocks){
 			currentObj = FreeList_;
@@ -50,6 +48,7 @@ void ObjectAllocator::CreateAPage(){
 	catch(std::bad_alloc &){
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
+	return NewPage;
 }
 
 
@@ -69,7 +68,9 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	
 	if(!config_.UseCPPMemManager_){
 		// create if not using standard new/delete
-		CreateAPage();
+		lowerBoundary = CreateAPage();
+		//printf("first page start: %p\n", (void*)lowerBoundary);
+		upperBoundary = lowerBoundary + stats_.PageSize_;
 	}
 
 }
@@ -93,11 +94,23 @@ void* ObjectAllocator::Allocate(const char *label) {
 		return new char[size];
 	}
 
+	
+	if (stats_.FreeObjects_ == 0 && stats_.PagesInUse_ < config_.MaxPages_){
+		//check page limit before adding new page
+		char* newPageStart;
+		newPageStart = CreateAPage(); // create another page and link to preivous page
+		if(newPageStart < lowerBoundary)
+			lowerBoundary = newPageStart;
+
+		newPageStart += stats_.PageSize_;
+		if(newPageStart > upperBoundary)
+			upperBoundary = newPageStart;
+
+	}
 	if(stats_.FreeObjects_ > 0){
 		
 		// Remove first object from free list for client
 		NewObject = reinterpret_cast<char*>(FreeList_);
-		// printf("%p %p\n",(void*)FreeList_, (void*)FreeList_->Next );
 		FreeList_ = FreeList_->Next;
 
 		// Process assignment to header block
@@ -146,60 +159,6 @@ void* ObjectAllocator::Allocate(const char *label) {
 			stats_.MostObjects_ = stats_.Allocations_;
 
 	}
-	else if (stats_.FreeObjects_ == 0 && stats_.PagesInUse_ < config_.MaxPages_){
-		//check page limit before adding new page
-		//std::cout<<"create new page\n";
-		CreateAPage(); // create another page and link to preivous page
-
-		// Remove first object from free list for client
-		NewObject = reinterpret_cast<char*>(FreeList_);
-		label = NewObject;
-		FreeList_ = FreeList_->Next;
-
-		// Process assignment to header block
-		AllocNum +=1;
-		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
-		// Check header block type then assigning pointers
-		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
-			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
-			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
-			*ptrToUseCount = static_cast<char>(*ptrToUseCount + 1); // increment use count
-
-			memset(ptrToAllocNum, static_cast<int>(AllocNum), 1); // set memory signature
-			memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
-		}
-		else if(config_.HBlockInfo_.type_ == OAConfig::hbExternal){
-			// allocate external header
-			MemBlockInfo* ptrHbExternal = NULL;
-			try{
-				ptrHbExternal = new MemBlockInfo();
-			}
-			catch(std::bad_alloc &){
-				throw OAException(OAException::E_NO_MEMORY, 
-									std::string("No Memory, allocation failed for external header"));
-			}
-			ptrHbExternal->in_use = true;
-			ptrHbExternal->label = const_cast<char *>(label);
-			ptrHbExternal->alloc_num = static_cast<unsigned int>(AllocNum);
-			*(reinterpret_cast<MemBlockInfo **>(ptrToHeaderBlock)) = ptrHbExternal;
-		}
-		else if(config_.HBlockInfo_.type_ == OAConfig::hbBasic){
-			ptrToAllocNum = ptrToHeaderBlock;
-			memset(ptrToAllocNum, static_cast<int>(AllocNum), 1); // set memory signature
-			memset(ptrToAllocNum+4, 0x1, 1); // Flag assignment
-		}
-
-		//process byte pattern for Object space as "allocated"
-		memset(NewObject, ALLOCATED_PATTERN, stats_.ObjectSize_);
-
-		//update acounting info
-		stats_.ObjectsInUse_ += 1;
-		stats_.FreeObjects_ -= 1;
-		stats_.Allocations_ += 1;
-
-		if(stats_.Allocations_ > stats_.MostObjects_ )
-			stats_.MostObjects_ = stats_.Allocations_;
-	}
 	else{
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
@@ -233,50 +192,22 @@ void ObjectAllocator::Free(void *Object){
 	}
 	ptrFreeList = nullptr;
 
+	//printf("Obj: %p       upp: %p    low: %p      ", Object, (void*)upperBoundary, (void*)lowerBoundary);
 	//check for out-of-bounds
-	char* lowerBoundary = nullptr;
-	char* upperBoundary = nullptr;
-	char* rightPage = nullptr;
-	size_t ObjLowBou;
-	size_t ObjUppBou;
-	unsigned int count = 1;
-	GenericObject* ptrPageList = PageList_;
-	while(ptrPageList){
-		if(count == 1){
-			//store latest page's last byte address
-			upperBoundary = reinterpret_cast<char*>(ptrPageList);
-			upperBoundary = upperBoundary + stats_.PageSize_ - 1;
-		}
-		if(count == stats_.PagesInUse_){
-			//store oldest page's head addreass
-			lowerBoundary = reinterpret_cast<char*>(ptrPageList);
-		}
-		
-		// find right page..
-		ObjLowBou = reinterpret_cast<size_t>(Object) - reinterpret_cast<size_t>(ptrPageList);
-		ObjUppBou = reinterpret_cast<size_t>(ptrPageList) + stats_.PageSize_ - reinterpret_cast<size_t>(Object);
-		// printf("Object: %lu ptrPageList: %lu\n", (size_t)Object, (size_t)ptrPageList);
-		// printf("low: %lu Upp: %lu sum: %lu\n", ObjLowBou, ObjUppBou, ObjLowBou + ObjUppBou );
-		if(ObjLowBou + ObjUppBou == stats_.PageSize_ && ObjLowBou < stats_.PageSize_){
-			// found right page
-			// printf("found page!\n");
-			rightPage = reinterpret_cast<char*>(ptrPageList);
-			break;
-		}
-		//printf("%i: %p - %p = %lu\n",count, (void*)ptrPageList, (void*)ptrPageList->Next, (size_t)ptrPageList - (size_t)ptrPageList->Next);
-		// flip to next page
-		count++;
-		ptrPageList = ptrPageList->Next;
-	}
-	ptrPageList = NULL;
 	if(Object < lowerBoundary || Object > upperBoundary)
 	{
-		//std::cout<<"outof boudns\n";
 		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. ");
 	}
 
+	//check if page can be found
+	GenericObject* page = PageList_;
+	int ret = FindPageByObject(page, Object);
+	if(ret == -1)
+		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. page not found ");
+	
 	//check if object is aligned and base case
-	size_t ObjectPosition = (size_t)Object - (size_t)rightPage;
+	size_t ObjectPosition = (size_t)Object - (size_t)page;
+	// printf("OP:%p = Obj: %p - pg: %p\n",(void*)ObjectPosition, Object, (void*)page);
 	bool isAligned = ((ObjectPosition - 8 - config_.PadBytes_ - config_.HBlockInfo_.size_)  
 					% (stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_))  == 0;
 	bool baseCase = ObjectPosition % stats_.PageSize_ == 0; //special case
@@ -420,15 +351,13 @@ unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
 
 // Frees all empty page
 unsigned ObjectAllocator::FreeEmptyPages(){
-	return 1;
+	return 0;
 }
 
 // Testing/Debugging/Statistic methods
 // true=enable, false=disable
 void ObjectAllocator::SetDebugState(bool State){
-	if(State){
-
-	}
+	config_.DebugOn_ = State;
 }
 
 // returns a pointer to the internal free list
@@ -475,4 +404,28 @@ bool ObjectAllocator::isPadCorrupted(void* ptrToBlock) const{
 		
 	}
 	return false; // no corruption
+}
+
+int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const{
+	GenericObject* page = reinterpret_cast<GenericObject*>(p);
+	size_t ObjLowBou;
+	size_t ObjUppBou;
+	while(page){
+		// find right page..
+		// printf("Page123: %p\n", (void*)page);
+		ObjLowBou = reinterpret_cast<size_t>(Object) - reinterpret_cast<size_t>(page);
+		ObjUppBou = reinterpret_cast<size_t>(page) + stats_.PageSize_ - reinterpret_cast<size_t>(Object);
+		// printf("ObjLowBou: %lu   ObjUppBou: %lu\n", ObjLowBou, ObjUppBou);
+		if(ObjLowBou + ObjUppBou == stats_.PageSize_ && ObjLowBou < stats_.PageSize_){
+			// found right page
+			// printf("found page! at %p\n", (void*)(page));
+			p = page;
+			//FoundPage = reinterpret_cast<char*>(page);
+			return 1;
+		}
+
+		// flip to next page
+		page = page->Next;
+	}
+	return -1; // page not found
 }

@@ -202,13 +202,15 @@ void PrintArray(T* array, unsigned count)
 }
 
 const unsigned objects = 4096;
-const unsigned pages = 100;
+const unsigned pages = 5; //100;
 const unsigned total = objects * pages;
 void* ptrs[total];
 
 #include <ctime>
 void Stress(bool UseNewDelete)
 {
+
+   
     ObjectAllocator* oa;
 
     try
@@ -218,7 +220,6 @@ void Stress(bool UseNewDelete)
         unsigned padbytes = 0;
         OAConfig::HeaderBlockInfo header(OAConfig::hbNone);
         unsigned alignment = 0;
-
         OAConfig config(newdel, objects, pages, debug, padbytes, header, alignment);
         oa = new ObjectAllocator(sizeof(Student), config);
         for (unsigned i = 0; i < total; i++)
@@ -228,10 +229,8 @@ void Stress(bool UseNewDelete)
         }
 
         Shuffle(ptrs, total);
-        cout<<"BEAKR";
         for (unsigned i = 0; i < total; i++)
         {
-            cout<<i<<endl;
             oa->Free(ptrs[i]);
         }
 
@@ -273,6 +272,7 @@ void StressFreeChecking(const OAConfig::HeaderBlockInfo& header)
         oa = new ObjectAllocator(sizeof(Student), config);
         for (unsigned int i = 0; i < total; i++)
         {
+            
             void* p = oa->Allocate();
             ptrs[i] = static_cast<char*>(p);
         }

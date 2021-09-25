@@ -274,7 +274,7 @@ class ObjectAllocator
     char* NewObject;
     GenericObject* ObjectList;//point to.. any block/object
 
-    void CreateAPage();
+    char* CreateAPage();
 
     long unsigned int AllocNum = 0;
     char* ptrToHeaderBlock = NULL;
@@ -285,6 +285,12 @@ class ObjectAllocator
     static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
 
     bool isPadCorrupted(void* ptrToBlock) const;
+
+    int FindPageByObject(GenericObject* &page, void* Object) const;
+
+    char* lowerBoundary;
+	  char* upperBoundary;
+
 };
 
 #endif
