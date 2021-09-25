@@ -385,8 +385,56 @@ void ObjectAllocator::Free(void *Object){
 
 // Calls the callback fn for each block still in use
 unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
-	fn(nullptr, 16);
-	return (unsigned)1;
+	GenericObject *pItr = nullptr;
+  unsigned char *pCheck = nullptr;
+  GenericObject *pPage = PageList_;
+
+  int totalbk = 0;
+
+  // iterate through the pages
+  while (pPage)
+  {
+    int offset = static_cast<int>(sizeof(void *));
+    // move itr to object
+   // setPointer(&pItr, pPage, offset);
+	pItr = reinterpret_cast<GenericObject *>(reinterpret_cast<char *>(pPage) + offset);
+    pCheck = reinterpret_cast<unsigned char *>(pItr);
+
+    // Iterate through current page objects
+    for (unsigned int i = 0; i < config_.ObjectsPerPage_; ++i)
+    {
+      if (config_.HBlockInfo_.type_ == OAConfig::hbExternal)
+      {
+        pCheck += config_.HBlockInfo_.size_;
+        if (*pCheck != FREED_PATTERN)
+        {
+          fn(pCheck, stats_->ObjectSize_);
+          ++totalbk; //keep track of total obj in use
+        }
+      }
+      else
+      {
+        // Check the bits that are active
+        pCheck += config_.HBlockInfo_.size_ - 1;
+
+        if (*pCheck)
+        {
+          pCheck += config_.PadBytes_ + 1;
+          fn(pCheck, stats_->ObjectSize_);
+          ++totalbk;
+        }
+        else
+        {
+          pCheck += config_.PadBytes_ + 1;
+        }
+      }
+      pCheck += stats_->ObjectSize_ + config_.PadBytes_;
+    }
+    // go to next ojbject
+    pPage = pPage->Next;
+  }
+  // return number of blocks in use by the client.
+  return totalbk;
 }
 
 // Calls the callback fn for each block that is potentially corrupted
