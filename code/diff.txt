@@ -1,9 +1,4 @@
-439,440c439
-< Exception thrown from Free in TestLeak.
-< Pages in use: 8, Objects in use: 30, Available objects: 2, Allocs: 32, Frees: 2
----
-> Pages in use: 8, Objects in use: 16, Available objects: 16, Allocs: 32, Frees: 16
-446,447c445,572
+445,446c445,572
 < Block at 0x00000000, 16 bytes long.
 < Object dump complete. [1]
 ---

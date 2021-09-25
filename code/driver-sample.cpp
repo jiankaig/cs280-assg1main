@@ -805,7 +805,8 @@ void TestExtendedHeaderBlocks(unsigned size)
     ///////////////////////////////////////////////////////////////////////////////////////////////
     try
     {
-        pStudent2 = static_cast<Student*>(oa->Allocate());
+        	// std::cout<<"BREAKPT - ISSUE START\n";
+        pStudent2 = static_cast<Student*>(oa->Allocate()); // <<<<<issue
     }
     catch (const OAException& e)
     {
@@ -1490,8 +1491,10 @@ void TestLeak(void)
 
     try
     {
-        for (unsigned i = 0; i < count; i += 2)
+        for (unsigned i = 0; i < count; i += 2){
+            // cout<<"BREAKPT\n";
             employeeObjectMgr->Free(pEmps[i]);
+            }
     }
     catch (const OAException& e)
     {
