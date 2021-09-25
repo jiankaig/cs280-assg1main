@@ -228,8 +228,10 @@ void Stress(bool UseNewDelete)
         }
 
         Shuffle(ptrs, total);
+        cout<<"BEAKR";
         for (unsigned i = 0; i < total; i++)
         {
+            cout<<i<<endl;
             oa->Free(ptrs[i]);
         }
 
@@ -269,7 +271,6 @@ void StressFreeChecking(const OAConfig::HeaderBlockInfo& header)
 
         OAConfig config(newdel, objects, pages, debug, padbytes, header, alignment);
         oa = new ObjectAllocator(sizeof(Student), config);
-
         for (unsigned int i = 0; i < total; i++)
         {
             void* p = oa->Allocate();
@@ -1472,6 +1473,8 @@ void TestLeak(void)
         {
             pEmps[i] = static_cast<Employee*>(employeeObjectMgr->Allocate());
             FillEmployee(*pEmps[i]);
+
+            // printf("FOR %d: %p\n", i,  (void*)pEmps[i]);
         }
         catch (const OAException& e)
         {
@@ -1510,15 +1513,22 @@ void TestLeak(void)
 
     PrintCounts(employeeObjectMgr);
 
+	// printf("Breakpoint5: %d\n", employeeObjectMgr->GetConfig().MaxPages_);
     cout << "Most employees in use: " << employeeObjectMgr->GetStats().MostObjects_ << endl;
+	employeeObjectMgr->GetStats();
+    // printf("Breakpoint5: %d\n", employeeObjectMgr->GetConfig().MaxPages_);
 
     cout << "\nChecking for leaks...\n";
     CheckAndDumpLeaks(employeeObjectMgr);
-
     try
     {
-        for (unsigned i = 1; i < count; i += 2)
+        for (unsigned i = 1; i < count; i += 2){
+// cout<<"Breakpoint\n";
+            // printf("FOR2: %p\n", (void*)pEmps[i]);
             employeeObjectMgr->Free(pEmps[i]);
+// cout<<"Breakpoint END\n";
+
+        }
     }
     catch (const OAException& e)
     {
@@ -2204,7 +2214,7 @@ int main(int argc, char** argv)
         Stress(false);
         cout << endl;
         break;
-#if 1
+#if 0
     case 18:
         cout << "============================== Test alignment..." << endl;
         TestAlignment();
@@ -2278,18 +2288,18 @@ int main(int argc, char** argv)
         cout << "============================== Test stress using allocator..." << endl;
         Stress(false);
         cout << endl;
-        cout << "============================== Test alignment..." << endl;
-        TestAlignment();
-        cout << endl;
-        cout << "============================== Test free empty pages 1..." << endl;
-        TestFreeEmptyPages1();
-        cout << endl;
-        cout << "============================== Test free empty pages 2..." << endl;
-        TestFreeEmptyPages2();
-        cout << endl;
-        cout << "============================== Test free empty pages 3..." << endl;
-        TestFreeEmptyPages3(); 
-        cout << endl;
+        // cout << "============================== Test alignment..." << endl;
+        // TestAlignment();
+        // cout << endl;
+        // cout << "============================== Test free empty pages 1..." << endl;
+        // TestFreeEmptyPages1();
+        // cout << endl;
+        // cout << "============================== Test free empty pages 2..." << endl;
+        // TestFreeEmptyPages2();
+        // cout << endl;
+        // cout << "============================== Test free empty pages 3..." << endl;
+        // TestFreeEmptyPages3(); 
+        // cout << endl;
         break;
     }
 
