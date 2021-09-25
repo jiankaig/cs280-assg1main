@@ -266,8 +266,8 @@ class ObjectAllocator
     GenericObject *FreeList_; //!< the beginning of the list of objects
     
     // Lots of other private stuff... 
-    const OAConfig& config_;
-    OAStats* stats_;
+    OAConfig config_;
+    OAStats stats_;
     OAException* OAException_;
 
     char* NewPage;
@@ -283,6 +283,8 @@ class ObjectAllocator
     char* ptrToFlag = NULL;
 
     static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
+
+    bool isPadCorrupted(void* ptrToBlock) const;
 };
 
 #endif
