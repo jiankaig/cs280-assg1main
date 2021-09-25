@@ -220,19 +220,11 @@ void ObjectAllocator::Free(void *Object){
 
 	//check left and right pad bytes for pad pattern
 	if(config_.PadBytes_ != 0){
-		char* leftPadStart = reinterpret_cast<char*>(Object) - config_.PadBytes_;
-		char* rightPadStart = reinterpret_cast<char*>(Object) + stats_.ObjectSize_;
-		
-		int count = config_.PadBytes_;
-		while(count!=0){
-			if(*leftPadStart%0xFFFFFF00 !=PAD_PATTERN){
-				throw OAException(OAException::E_CORRUPTED_BLOCK,"corruption on left");
-			}
-			if(*rightPadStart%0xFFFFFF00 != PAD_PATTERN){
-				throw OAException(OAException::E_CORRUPTED_BLOCK,"corruption on right");
-			}
-			count--;
-		}
+		PaddState ps = isPadCorrupted(Object);
+		if(ps == CORRUPT_LEFT)
+			throw OAException(OAException::E_CORRUPTED_BLOCK,"corruption on left");
+		if(ps == CORRUPT_RIGHT)
+			throw OAException(OAException::E_CORRUPTED_BLOCK,"corruption on right");
 		
 	}
 	
@@ -332,9 +324,9 @@ unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
 		char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; //firstblock
 		for(int i=0;i<DEFAULT_OBJECTS_PER_PAGE;i++){
 			//check if block is corrupted
-			if(isPadCorrupted(reinterpret_cast<void*>(ptrToBlock))) //if in use, callback fn
+			PaddState padState = isPadCorrupted(reinterpret_cast<void*>(ptrToBlock));
+			if(padState == CORRUPT_LEFT || padState == CORRUPT_RIGHT) //if in use, callback fn
 			{
-				//  std::cout<<"callack\n";
 				fn(ptrToBlock, stats_.ObjectSize_);
 				numOfCorrupt++;
 			}
@@ -381,7 +373,7 @@ OAStats ObjectAllocator::GetStats() const{
 
 //Private methods
 
-bool ObjectAllocator::isPadCorrupted(void* ptrToBlock) const{
+ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) const{
 	//check left and right pad bytes for pad pattern
 	if(config_.PadBytes_ != 0){
 		char* leftPadStart = reinterpret_cast<char*>(ptrToBlock) - config_.PadBytes_;
@@ -389,8 +381,6 @@ bool ObjectAllocator::isPadCorrupted(void* ptrToBlock) const{
 		
 		int count = config_.PadBytes_; // check each byte indiviually
 		while(count!=0){
-			//printf("Left PADD: %X != %X\n",(unsigned char)*leftPadStart, PAD_PATTERN);
-			//printf("Right PADD: %X != %X\n",(unsigned char)*rightPadStart, PAD_PATTERN);
 			if(static_cast<unsigned char>(*leftPadStart)!=PAD_PATTERN){
 				return true; //corruptioon found
 			}

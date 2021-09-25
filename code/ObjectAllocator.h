@@ -284,12 +284,13 @@ class ObjectAllocator
 
     static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
 
-    bool isPadCorrupted(void* ptrToBlock) const;
-
     int FindPageByObject(GenericObject* &page, void* Object) const;
 
     char* lowerBoundary;
 	  char* upperBoundary;
+
+    enum PaddState{ NO_CORRUPT, CORRUPT_LEFT, CORRUPT_RIGHT}padState_;
+    ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
 
 };
 
