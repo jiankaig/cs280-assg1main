@@ -319,7 +319,7 @@ class ObjectAllocator
     enum PaddState{ NO_CORRUPT, CORRUPT_LEFT, CORRUPT_RIGHT}padState_;
 
     //private methods
-    void ObjectAllocator::ComputeAlign_();
+    void ComputeAlign_();
     char* CreateAPage();
     int FindPageByObject(GenericObject* &page, void* Object) const;
     ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
