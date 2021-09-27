@@ -197,7 +197,8 @@ void* ObjectAllocator::Allocate(const char *label) {
  * 		deallocates Object stored in PageList for client, by freeing the block it is in.
  * 
  * @param Object 
- * 		object 
+ * 		Pointer to object to be freed and addded to FreeList_
+ * 
  */
 void ObjectAllocator::Free(void *Object){
 	
@@ -213,8 +214,6 @@ void ObjectAllocator::Free(void *Object){
 	ptrFreeList = FreeList_;
 	
 	while(ptrFreeList){
-		// printf("in while looop\n");
-		// printf("ptrFreeList: %p, Object: %p\n", reinterpret_cast<void*>(ptrFreeList), Object);
 		if(ptrFreeList == reinterpret_cast<GenericObject* >(Object)){
 			bNoDoubleFree = false; // repeated object freed
 			break;
@@ -223,7 +222,6 @@ void ObjectAllocator::Free(void *Object){
 	}
 	ptrFreeList = nullptr;
 
-	//printf("Obj: %p       upp: %p    low: %p      ", Object, (void*)upperBoundary, (void*)lowerBoundary);
 	//check for out-of-bounds
 	if(Object < lowerBoundary || Object > upperBoundary)
 	{
@@ -242,10 +240,7 @@ void ObjectAllocator::Free(void *Object){
 	bool isAligned = ((ObjectPosition - 8 - config_.PadBytes_ - config_.HBlockInfo_.size_)  
 					% (stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_))  == 0;
 	bool baseCase = ObjectPosition % stats_.PageSize_ == 0; //special case
-	//printf("L:%p | U:%p | O:%p\n",lowerBoundary, upperBoundary, Object);
-	// printf("objectpos: %lu\n", ObjectPosition);
 	if(!isAligned || baseCase){
-		//std::cout<<"MIS ALIGN!!!!!!!!!\n";
 		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. mis-alignment ");
 	}
 
@@ -296,7 +291,19 @@ void ObjectAllocator::Free(void *Object){
 }
 
 
-// Calls the callback fn for each block still in use
+/**
+ * @fn unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const
+ * @brief 
+ * 		Calls the callback fn for each block still in use
+ * 
+ * 		This function will display memory region that were currently allocated.
+ * 
+ * @param fn 
+ * 		Pointer to a function that print out the allocated memory
+ * 
+ * @return unsigned 
+ * 		Return the number of objects in use
+ */
 unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
 	unsigned numOfLeaks = 0;
 	GenericObject* page = PageList_;//loop through each page in use
@@ -346,7 +353,18 @@ unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
 	return numOfLeaks;
 }
 
-// Calls the callback fn for each block that is potentially corrupted
+
+/**
+ * @fn unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const
+ * @brief 
+ * 		Calls the callback fn for each block that is potentially corrupted
+ * 
+ * 		This function checks for memory corruption of each block of memory.
+ * @param fn 
+ * 		Pointer to a function that display the memory being corrupted.
+ * @return unsigned 
+ * 		return the number of corrupted memory region.
+ */
 unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
 	unsigned numOfCorrupt = 0;
 	GenericObject* page = PageList_;//loop through each page in use
@@ -371,40 +389,87 @@ unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
 	return numOfCorrupt;
 }
 
-// Frees all empty page
+/**
+ * @fn unsigned ObjectAllocator::FreeEmptyPages()
+ * @brief 
+ * 		This function frees and deallocate all empty pages
+ * 		This function is not implemented to match extra credit test cases
+ * 
+ * @return unsigned 
+ * 		Return number of free pages
+ */
 unsigned ObjectAllocator::FreeEmptyPages(){
 	return 0;
 }
 
-// Testing/Debugging/Statistic methods
-// true=enable, false=disable
+/**
+ * @fn void ObjectAllocator::SetDebugState(bool State)
+ * @brief 
+ * 		This function returns the freelist pointer from the OA.
+ * 
+ * @param State 
+ * 		For Testing/Debugging/Statistic methods
+ * 		true=enable, false=disable
+ */
 void ObjectAllocator::SetDebugState(bool State){
 	config_.DebugOn_ = State;
 }
 
-// returns a pointer to the internal free list
+/**
+ * @fn const void* ObjectAllocator::GetFreeList()
+ * @brief 
+ * 		returns a pointer to the internal free list
+ * 
+ * @return const void* 
+ */
 const void* ObjectAllocator::GetFreeList() const{
 	return FreeList_;
 }
 
-// returns a pointer to the internal page list
+/**
+ * @fn const void* ObjectAllocator::GetPageList() const
+ * @brief 
+ * 		returns a pointer to the internal page list
+ * 
+ * @return const void* 
+ */
 const void* ObjectAllocator::GetPageList() const{
 	return PageList_;
 }
 	
 // returns the configuration parameters
+/**
+ * @fn OAConfig ObjectAllocator::GetConfig() const{
+ * @brief 
+ * 		returns the configuration parameters
+ * @return OAConfig 
+ * 		contains configuration properties of memory manager
+ */		
 OAConfig ObjectAllocator::GetConfig() const{
 	return config_;
 }  
  
-// returns the statistics for the allocator 
+/**
+ * @fn OAStats ObjectAllocator::GetStats() const
+ * @brief 
+ * 		returns the statistics for the allocator 
+ * @return OAStats 
+ * 		contains statics info of Objet allocator
+ */
 OAStats ObjectAllocator::GetStats() const{
 	return stats_;
 }         
 
 //---------------------------------------------------------------------------
 //Private methods
-
+/**
+ * @fn char* ObjectAllocator::CreateAPage()
+ * @brief 
+ * 		helper function for creating a page based on configuration found
+ * 		in OAConfig
+ * @return char* 
+ * 		returns pointer to Page Allocated
+ */
 char* ObjectAllocator::CreateAPage(){
 	try{
 		//1. Request memory for first page
@@ -456,6 +521,17 @@ char* ObjectAllocator::CreateAPage(){
 	return NewPage;
 }
 
+/**
+ * @fn int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const
+ * @brief 
+ * 		helper function to find page that object was allocated
+ * @param p 
+ * 		reference to pointer to page that object was found at. 
+ * @param Object 
+ * 		pointer to object at which page to be found
+ * @return int 
+ * 		returns 1 if successful page found, return -1 if page not found
+ */
 int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const{
 	GenericObject* page = reinterpret_cast<GenericObject*>(p);
 	size_t ObjLowBou;
@@ -477,7 +553,15 @@ int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const{
 	return -1; // page not found
 }
 
-
+/**
+ * @fn ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) const
+ * @brief 
+ * 		helper function to check if block's pad are corrupted 
+ * @param ptrToBlock 
+ * 		pointer to block for pad checking
+ * @return ObjectAllocator::PaddState 
+ * 		returns enum CORRUPT_LEFT or CORRUPT_RIGHT or NO_CORRUPT
+ */
 ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) const{
 	//check left and right pad bytes for pad pattern
 	if(config_.PadBytes_ != 0){
