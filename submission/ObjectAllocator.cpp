@@ -25,7 +25,7 @@
  * 
  *    Private methods include:
  *      checkObjectForPattern
- * 		ComputeAlign_
+ * 		ComputeAlignment
  *      CreateAPage
  *      FindPageByObject
  *      isPadCorrupted
@@ -34,6 +34,7 @@
  *    Specific portions that gave you the most trouble: optimisation of free.
  * @version 0.1 20 tests run/16 tests passed
  * @version 0.2 20 tests run/19 tests passed
+ * @version 0.3 20 tests run/20 tests passed
  * @date 2021-09-26
  * 
  * @copyright Copyright (c) 2021
@@ -63,9 +64,11 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	FreeList_ = NULL;
 	PageList_ = NULL;
 
-	ComputeAlign_();
-	
 	stats_.ObjectSize_ = ObjectSize;
+	sizeof_LeftmostBlock = sizeof(void*) + config_.PadBytes_ + config_.HBlockInfo_.size_;
+	sizeof_InnerBlock = stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_;
+	ComputeAlignment();
+	
 	stats_.PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
 		+ config_.PadBytes_ * 2 * config_.ObjectsPerPage_
 		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_)
@@ -515,35 +518,23 @@ bool ObjectAllocator::checkObjectForPattern(void* ptrToBlock, const unsigned cha
 }
 
 /**
- * @fn void ObjectAllocator::ComputeAlign_()
+ * @fn void ObjectAllocator::ComputeAlignment()
  * @brief 
  * 		This helper function helps to compute the alignment of the memory block.
  */
-void ObjectAllocator::ComputeAlign_() {
-  // return if there is no alignment
-  if (config_.Alignment_ == 0) return;
+void ObjectAllocator::ComputeAlignment() {
+	// return if there is no alignment
+	if (config_.Alignment_ == 0) return;
 
-  // compute data size for left alignment
-  size_t inSize =
-      sizeof(GenericObject *) + config_.HBlockInfo_.size_ + config_.PadBytes_;
-  size_t mod = (inSize % config_.Alignment_);
+	// compute left alignment
+	if(static_cast<unsigned int>(sizeof_LeftmostBlock)% config_.Alignment_ != 0) 
+		config_.LeftAlignSize_ = config_.Alignment_ - (static_cast<unsigned int>(sizeof_LeftmostBlock) % config_.Alignment_);
 
-  if (mod == 0 || inSize <= config_.Alignment_) return;
-
-  // compute left alignment if inSize is greater and not
-  // multiples of alignment size
-  config_.LeftAlignSize_ = config_.Alignment_ - static_cast<unsigned int>(mod);
-
-  // compute data size for inter alignment
-  inSize = stats_.ObjectSize_ + 2 * config_.PadBytes_ +
-           config_.HBlockInfo_.size_;
-  mod = (inSize % config_.Alignment_);
-
-  if (mod == 0 || inSize <= config_.Alignment_) return;
-
-  // compute inter alignment if inSize is greater and not
-  // multiples of alignment size
-  config_.InterAlignSize_ = config_.Alignment_ - static_cast<unsigned int>(mod);
+	// compute inter alignment 
+	if(static_cast<unsigned int>(sizeof_InnerBlock) % config_.Alignment_ != 0)
+		config_.InterAlignSize_ = config_.Alignment_ - (static_cast<unsigned int>(sizeof_InnerBlock) % config_.Alignment_);
+	else
+		config_.InterAlignSize_ = 0;
 }
 
 /**

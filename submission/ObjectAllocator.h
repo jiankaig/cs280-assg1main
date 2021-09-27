@@ -26,7 +26,7 @@
  * 
  *    Private methods include:
  *      checkObjectForPattern
- *      ComputeAlign_
+ *      ComputeAlignment
  *      CreateAPage
  *      FindPageByObject
  *      isPadCorrupted
@@ -324,7 +324,7 @@ class ObjectAllocator
     enum PaddState{ NO_CORRUPT, CORRUPT_LEFT, CORRUPT_RIGHT}padState_;
 
     //private methods
-    void ComputeAlign_();
+    void ComputeAlignment();
     char* CreateAPage();
     int FindPageByObject(GenericObject* &page, void* Object) const;
     ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
