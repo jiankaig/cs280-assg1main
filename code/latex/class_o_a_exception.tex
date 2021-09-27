@@ -1,0 +1,117 @@
+\hypertarget{class_o_a_exception}{}\doxysection{OAException Class Reference}
+\label{class_o_a_exception}\index{OAException@{OAException}}
+
+
+{\ttfamily \#include $<$Object\+Allocator.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\+\_\+\+EXCEPTION}} \{ \newline
+\mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae18f5cbb3503fde484739545afcc9161}{E\+\_\+\+NO\+\_\+\+MEMORY}}
+, \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a00b488cc53e8fb49d4b2dd75291b7f82}{E\+\_\+\+NO\+\_\+\+PAGES}}
+, \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a8c562017500215f88c804392775c6b1b}{E\+\_\+\+BAD\+\_\+\+BOUNDARY}}
+, \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a2123fdbb5bd50beb07f893ac38688bce}{E\+\_\+\+MULTIPLE\+\_\+\+FREE}}
+, \newline
+\mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae4bfdc0e26752fbd32d5fdfe183e52c0}{E\+\_\+\+CORRUPTED\+\_\+\+BLOCK}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_o_a_exception_a80250ef41d10e8f7e73b9601ca3cdf3d}{OAException}} (\mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\+\_\+\+EXCEPTION}} Err\+Code, const std\+::string \&Message)
+\item 
+virtual \mbox{\hyperlink{class_o_a_exception_a3fa19a5710a642ea888d6bd86cc79e3b}{$\sim$\+OAException}} ()
+\item 
+\mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\+\_\+\+EXCEPTION}} \mbox{\hyperlink{class_o_a_exception_ab005e5c84550ee610fbc08272477c1bb}{code}} () const
+\item 
+virtual const char $\ast$ \mbox{\hyperlink{class_o_a_exception_a1bef666763256021c1fb1074ec0b7ed9}{what}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Exception class 
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}\label{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}} 
+\index{OAException@{OAException}!OA\_EXCEPTION@{OA\_EXCEPTION}}
+\index{OA\_EXCEPTION@{OA\_EXCEPTION}!OAException@{OAException}}
+\doxysubsubsection{\texorpdfstring{OA\_EXCEPTION}{OA\_EXCEPTION}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OAException\+::\+OA\+\_\+\+EXCEPTION}}}
+
+Possible exception codes \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\_NO\_MEMORY@{E\_NO\_MEMORY}!OAException@{OAException}}\index{OAException@{OAException}!E\_NO\_MEMORY@{E\_NO\_MEMORY}}}\mbox{\Hypertarget{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae18f5cbb3503fde484739545afcc9161}\label{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae18f5cbb3503fde484739545afcc9161}} 
+E\+\_\+\+NO\+\_\+\+MEMORY&out of physical memory (operator new fails) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\_NO\_PAGES@{E\_NO\_PAGES}!OAException@{OAException}}\index{OAException@{OAException}!E\_NO\_PAGES@{E\_NO\_PAGES}}}\mbox{\Hypertarget{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a00b488cc53e8fb49d4b2dd75291b7f82}\label{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a00b488cc53e8fb49d4b2dd75291b7f82}} 
+E\+\_\+\+NO\+\_\+\+PAGES&out of logical memory (max pages has been reached) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\_BAD\_BOUNDARY@{E\_BAD\_BOUNDARY}!OAException@{OAException}}\index{OAException@{OAException}!E\_BAD\_BOUNDARY@{E\_BAD\_BOUNDARY}}}\mbox{\Hypertarget{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a8c562017500215f88c804392775c6b1b}\label{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a8c562017500215f88c804392775c6b1b}} 
+E\+\_\+\+BAD\+\_\+\+BOUNDARY&block address is on a page, but not on any block-\/boundary \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\_MULTIPLE\_FREE@{E\_MULTIPLE\_FREE}!OAException@{OAException}}\index{OAException@{OAException}!E\_MULTIPLE\_FREE@{E\_MULTIPLE\_FREE}}}\mbox{\Hypertarget{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a2123fdbb5bd50beb07f893ac38688bce}\label{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a2123fdbb5bd50beb07f893ac38688bce}} 
+E\+\_\+\+MULTIPLE\+\_\+\+FREE&block has already been freed \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\_CORRUPTED\_BLOCK@{E\_CORRUPTED\_BLOCK}!OAException@{OAException}}\index{OAException@{OAException}!E\_CORRUPTED\_BLOCK@{E\_CORRUPTED\_BLOCK}}}\mbox{\Hypertarget{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae4bfdc0e26752fbd32d5fdfe183e52c0}\label{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae4bfdc0e26752fbd32d5fdfe183e52c0}} 
+E\+\_\+\+CORRUPTED\+\_\+\+BLOCK&block has been corrupted (pad bytes have been overwritten) \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_o_a_exception_a80250ef41d10e8f7e73b9601ca3cdf3d}\label{class_o_a_exception_a80250ef41d10e8f7e73b9601ca3cdf3d}} 
+\index{OAException@{OAException}!OAException@{OAException}}
+\index{OAException@{OAException}!OAException@{OAException}}
+\doxysubsubsection{\texorpdfstring{OAException()}{OAException()}}
+{\footnotesize\ttfamily OAException\+::\+OAException (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\+\_\+\+EXCEPTION}}}]{Err\+Code,  }\item[{const std\+::string \&}]{Message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor
+
+
+\begin{DoxyParams}{Parameters}
+{\em Err\+Code} & One of the 5 error codes listed above\\
+\hline
+{\em Message} & A message returned by the what method. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_o_a_exception_a3fa19a5710a642ea888d6bd86cc79e3b}\label{class_o_a_exception_a3fa19a5710a642ea888d6bd86cc79e3b}} 
+\index{OAException@{OAException}!````~OAException@{$\sim$OAException}}
+\index{````~OAException@{$\sim$OAException}!OAException@{OAException}}
+\doxysubsubsection{\texorpdfstring{$\sim$OAException()}{~OAException()}}
+{\footnotesize\ttfamily virtual OAException\+::$\sim$\+OAException (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Destructor 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_o_a_exception_ab005e5c84550ee610fbc08272477c1bb}\label{class_o_a_exception_ab005e5c84550ee610fbc08272477c1bb}} 
+\index{OAException@{OAException}!code@{code}}
+\index{code@{code}!OAException@{OAException}}
+\doxysubsubsection{\texorpdfstring{code()}{code()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\+\_\+\+EXCEPTION}} OAException\+::code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Retrieves the error code
+
+\begin{DoxyReturn}{Returns}
+One of the 5 error codes. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_o_a_exception_a1bef666763256021c1fb1074ec0b7ed9}\label{class_o_a_exception_a1bef666763256021c1fb1074ec0b7ed9}} 
+\index{OAException@{OAException}!what@{what}}
+\index{what@{what}!OAException@{OAException}}
+\doxysubsubsection{\texorpdfstring{what()}{what()}}
+{\footnotesize\ttfamily virtual const char $\ast$ OAException\+::what (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Retrieves a human-\/readable string regarding the error.
+
+\begin{DoxyReturn}{Returns}
+The NUL-\/terminated string representing the error. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_object_allocator_8h}{Object\+Allocator.\+h}}\end{DoxyCompactItemize}

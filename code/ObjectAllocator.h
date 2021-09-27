@@ -1,7 +1,45 @@
+/**
+ * @file ObjectAllocator.h
+ * @author Giam Jian Kai (jiankai.g\@digipen.edu)
+ * @par email: jiankai.g\@digipen.edu
+ * @par Digipend Login: jiankai.g
+ * @par Course: CS280
+ * @par Assignment #1
+ * @brief 
+ *    This file describes the interface to ObjectAllocator
+ *    This file contains the declaration of the following functions for
+ *    the ObjectAllocator class:
+ *    
+ *    Public functions include:
+ *      Constructor
+ *      Destructor
+ *      Allocate
+ *      Free
+ *      DumpMemoryInUse
+ *      ValidatePages
+ *      FreeEmptyPages
+ *      SetDebugState
+ *      GetFreeList
+ *      GetPageList
+ *      GetConfig
+ *      GetStats
+ * 
+ *    Private methods include:
+ *      CreateAPage
+ *      FindPageByObject
+ *    Hours spent on this assignment: 60
+ *    Specific portions that gave you the most trouble: optimisation of free.
+ * @version 0.1
+ * @date 2021-09-26
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 //---------------------------------------------------------------------------
 #ifndef OBJECTALLOCATORH
 #define OBJECTALLOCATORH
 //---------------------------------------------------------------------------
+
 
 #include <string>
 #include <cstring>
@@ -270,26 +308,16 @@ class ObjectAllocator
     OAStats stats_;
     OAException* OAException_;
 
+    long unsigned int AllocNum;
     char* NewPage;
     char* NewObject;
-    GenericObject* ObjectList;//point to.. any block/object
-
-    char* CreateAPage();
-
-    long unsigned int AllocNum = 0;
-    char* ptrToHeaderBlock = NULL;
-    char* ptrToUseCount = NULL;
-    char* ptrToAllocNum = NULL;
-    char* ptrToFlag = NULL;
-
-    static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
-
-    int FindPageByObject(GenericObject* &page, void* Object) const;
-
     char* lowerBoundary;
 	  char* upperBoundary;
 
+    static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
     enum PaddState{ NO_CORRUPT, CORRUPT_LEFT, CORRUPT_RIGHT}padState_;
+    char* CreateAPage();
+    int FindPageByObject(GenericObject* &page, void* Object) const;
     ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
 
 };

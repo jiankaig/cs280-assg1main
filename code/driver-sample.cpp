@@ -202,7 +202,7 @@ void PrintArray(T* array, unsigned count)
 }
 
 const unsigned objects = 4096;
-const unsigned pages = 100;
+const unsigned pages = 5;//100;
 const unsigned total = objects * pages;
 void* ptrs[total];
 
@@ -2115,7 +2115,7 @@ int main(int argc, char** argv)
 #endif
 
     int test=0;
-    std::cin >> test;
+    //std::cin >> test;
     if (argc > 1)
         test = std::atoi(argv[1]);
     if (argc > 2)

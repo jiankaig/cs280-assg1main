@@ -1,0 +1,109 @@
+\hypertarget{struct_o_a_config}{}\doxysection{OAConfig Struct Reference}
+\label{struct_o_a_config}\index{OAConfig@{OAConfig}}
+
+
+{\ttfamily \#include $<$Object\+Allocator.\+h$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{Header\+Block\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}{HBLOCK\+\_\+\+TYPE}} \{ {\bfseries hb\+None}
+, {\bfseries hb\+Basic}
+, {\bfseries hb\+Extended}
+, {\bfseries hb\+External}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_o_a_config_a036df6b3c5cefef38274637926155397}{OAConfig}} (bool Use\+CPPMem\+Manager=false, unsigned Objects\+Per\+Page=DEFAULT\+\_\+\+OBJECTS\+\_\+\+PER\+\_\+\+PAGE, unsigned Max\+Pages=DEFAULT\+\_\+\+MAX\+\_\+\+PAGES, bool Debug\+On=false, unsigned Pad\+Bytes=0, const \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{Header\+Block\+Info}} \&HBInfo=\mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{Header\+Block\+Info}}(), unsigned Alignment=0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_o_a_config_a864194ead28278f7907d50115c926050}\label{struct_o_a_config_a864194ead28278f7907d50115c926050}} 
+bool {\bfseries Use\+CPPMem\+Manager\+\_\+}
+\begin{DoxyCompactList}\small\item\em by-\/pass the functionality of the OA and use new/delete \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a22f5e834a557272ed3fdf3c7a77f2073}\label{struct_o_a_config_a22f5e834a557272ed3fdf3c7a77f2073}} 
+unsigned {\bfseries Objects\+Per\+Page\+\_\+}
+\begin{DoxyCompactList}\small\item\em number of objects on each page \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a345e27c350d84f467952bca70d3c14c1}\label{struct_o_a_config_a345e27c350d84f467952bca70d3c14c1}} 
+unsigned {\bfseries Max\+Pages\+\_\+}
+\begin{DoxyCompactList}\small\item\em maximum number of pages the OA can allocate (0=unlimited) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a0d0250be37964f50c3015b53fa0740d2}\label{struct_o_a_config_a0d0250be37964f50c3015b53fa0740d2}} 
+bool {\bfseries Debug\+On\+\_\+}
+\begin{DoxyCompactList}\small\item\em enable/disable debugging code (signatures, checks, etc.) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a3b470e4ab11955cbdc2b0c2df5cf19ba}\label{struct_o_a_config_a3b470e4ab11955cbdc2b0c2df5cf19ba}} 
+unsigned {\bfseries Pad\+Bytes\+\_\+}
+\begin{DoxyCompactList}\small\item\em size of the left/right padding for each block \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a1035d7e9e4addd8b58eacc88dca876cd}\label{struct_o_a_config_a1035d7e9e4addd8b58eacc88dca876cd}} 
+\mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{Header\+Block\+Info}} {\bfseries HBlock\+Info\+\_\+}
+\begin{DoxyCompactList}\small\item\em size of the header for each block (0=no headers) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a633e04ed09fb16dd216d20abff4b9ffc}\label{struct_o_a_config_a633e04ed09fb16dd216d20abff4b9ffc}} 
+unsigned {\bfseries Alignment\+\_\+}
+\begin{DoxyCompactList}\small\item\em address alignment of each block \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_af12cbdd25e5c6666c86e55cbcaffbdd8}\label{struct_o_a_config_af12cbdd25e5c6666c86e55cbcaffbdd8}} 
+unsigned {\bfseries Left\+Align\+Size\+\_\+}
+\begin{DoxyCompactList}\small\item\em number of alignment bytes required to align first block \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a5dc031628a98d0e68795a0bb68bc53ee}\label{struct_o_a_config_a5dc031628a98d0e68795a0bb68bc53ee}} 
+unsigned {\bfseries Inter\+Align\+Size\+\_\+}
+\begin{DoxyCompactList}\small\item\em number of alignment bytes required between remaining blocks \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_o_a_config_a4474c8412a0fc66a4d990dcb6b544299}\label{struct_o_a_config_a4474c8412a0fc66a4d990dcb6b544299}} 
+static const size\+\_\+t {\bfseries BASIC\+\_\+\+HEADER\+\_\+\+SIZE} = sizeof(unsigned) + 1
+\begin{DoxyCompactList}\small\item\em allocation number + flags \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_o_a_config_a6da9f1d439103801855d9053107a6410}\label{struct_o_a_config_a6da9f1d439103801855d9053107a6410}} 
+static const size\+\_\+t {\bfseries EXTERNAL\+\_\+\+HEADER\+\_\+\+SIZE} = sizeof(void$\ast$)
+\begin{DoxyCompactList}\small\item\em just a pointer \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{class_object_allocator}{Object\+Allocator}} configuration parameters 
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}\label{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}} 
+\index{OAConfig@{OAConfig}!HBLOCK\_TYPE@{HBLOCK\_TYPE}}
+\index{HBLOCK\_TYPE@{HBLOCK\_TYPE}!OAConfig@{OAConfig}}
+\doxysubsubsection{\texorpdfstring{HBLOCK\_TYPE}{HBLOCK\_TYPE}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}{OAConfig\+::\+HBLOCK\+\_\+\+TYPE}}}
+
+The different types of header blocks 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_o_a_config_a036df6b3c5cefef38274637926155397}\label{struct_o_a_config_a036df6b3c5cefef38274637926155397}} 
+\index{OAConfig@{OAConfig}!OAConfig@{OAConfig}}
+\index{OAConfig@{OAConfig}!OAConfig@{OAConfig}}
+\doxysubsubsection{\texorpdfstring{OAConfig()}{OAConfig()}}
+{\footnotesize\ttfamily OAConfig\+::\+OAConfig (\begin{DoxyParamCaption}\item[{bool}]{Use\+CPPMem\+Manager = {\ttfamily false},  }\item[{unsigned}]{Objects\+Per\+Page = {\ttfamily DEFAULT\+\_\+OBJECTS\+\_\+PER\+\_\+PAGE},  }\item[{unsigned}]{Max\+Pages = {\ttfamily DEFAULT\+\_\+MAX\+\_\+PAGES},  }\item[{bool}]{Debug\+On = {\ttfamily false},  }\item[{unsigned}]{Pad\+Bytes = {\ttfamily 0},  }\item[{const \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{Header\+Block\+Info}} \&}]{HBInfo = {\ttfamily \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{Header\+Block\+Info}}()},  }\item[{unsigned}]{Alignment = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor
+
+
+\begin{DoxyParams}{Parameters}
+{\em Use\+CPPMem\+Manager} & Determines whether or not to by-\/pass the OA.\\
+\hline
+{\em Objects\+Per\+Page} & Number of objects for each page of memory.\\
+\hline
+{\em Max\+Pages} & Maximum number of pages before throwing an exception. A value of 0 means unlimited.\\
+\hline
+{\em Debug\+On} & Is debugging code on or off?\\
+\hline
+{\em Pad\+Bytes} & The number of bytes to the left and right of a block to pad with.\\
+\hline
+{\em HBInfo} & Information about the header blocks used\\
+\hline
+{\em Alignment} & The number of bytes to align on. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_object_allocator_8h}{Object\+Allocator.\+h}}\end{DoxyCompactItemize}

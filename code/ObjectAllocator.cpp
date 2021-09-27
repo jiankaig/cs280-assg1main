@@ -1,62 +1,60 @@
+/**
+ * @file ObjectAllocator.cpp
+ * @author Giam Jian Kai (jiankai.g\@digipen.edu)
+ * @par email: jiankai.g\@digipen.edu
+ * @par Digipend Login: jiankai.g
+ * @par Course: CS280
+ * @par Assignment #1
+ * @brief 
+ *    This file contains the implementation of the following functions for
+ *    the ObjectAllocator class:
+ *    
+ *    Public functions include:
+ *      Constructor
+ *      Destructor
+ *      Allocate
+ *      Free
+ *      DumpMemoryInUse
+ *      ValidatePages
+ *      FreeEmptyPages
+ *      SetDebugState
+ *      GetFreeList
+ *      GetPageList
+ *      GetConfig
+ *      GetStats
+ * 
+ *    Private methods include:
+ *      CreateAPage
+ *      FindPageByObject
+ *    Hours spent on this assignment: 60
+ *    Specific portions that gave you the most trouble: optimisation of free.
+ * @version 0.1
+ * @date 2021-09-26
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include "ObjectAllocator.h"
-#include <iostream>//self-added
-char* ObjectAllocator::CreateAPage(){
-	try{
-		//1. Request memory for first page
-		NewPage = new char[stats_.PageSize_];
-		GenericObject* oldPage = PageList_;
-		//2. Casting the page to a GenericObject* and adjusting pointers.
-		PageList_ = reinterpret_cast<GenericObject* >(NewPage);
-		PageList_->Next = oldPage;
-		oldPage = NULL;
-		stats_.PagesInUse_ += 1;//update acounting info
-		stats_.FreeObjects_ += config_.ObjectsPerPage_;//update acounting info
 
-
-		//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
-		GenericObject* currentObj = NULL;
-		currentObj = FreeList_;
-		NewObject = NewPage + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; // point after page's Next
-		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
-		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
-		memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
-		memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
-		FreeList_ = reinterpret_cast<GenericObject*>(NewObject);
-		FreeList_->Next = NULL;
-		currentObj = NULL;
-		NewObject = NULL;
-
-		// cast remaining blocks
-		unsigned int countBlocks = config_.ObjectsPerPage_ - 1;
-		while(countBlocks){
-			currentObj = FreeList_;
-			NewObject = reinterpret_cast<char* >(FreeList_); 
-			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
-			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
-			memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
-			memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
-			memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
-			FreeList_ = reinterpret_cast<GenericObject* >(NewObject);
-			FreeList_->Next = currentObj;
-			currentObj = NULL;
-			NewObject = NULL;
-
-			countBlocks--;
-		}
-
-	}
-	catch(std::bad_alloc &){
-		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
-	}
-	return NewPage;
-}
-
-
-// Creates the ObjectManager per the specified values
-// Throws an exception if the construction fails. (Memory allocation problem)
+/**
+ * @fn ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
+		: config_(config), stats_(), OAException_()
+ * 
+ * @brief 
+ * 		Construct a new Object Allocator:: Object Allocator object
+ *		Creates the ObjectManager per the specified values
+ *		Throws an exception if the construction fails. (Memory allocation problem)
+ * 
+ * @param ObjectSize 
+ * 		Size of Object
+ * 
+ * @param config 
+ * 		an custom struct OAConfig that contains configuration of Memory Manager
+ */
 ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 : config_(config), stats_(), OAException_()
 {
+	AllocNum = 0;
 	FreeList_ = NULL;
 	PageList_ = NULL;
 	
@@ -76,12 +74,35 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 }
 
 // Destroys the ObjectManager (never throws)
+/**
+ * @fn ObjectAllocator::~ObjectAllocator()
+ * 
+ * @brief Destroy the Object Allocator:: Object Allocator object
+ */
 ObjectAllocator::~ObjectAllocator(){
+	if(config_.UseCPPMemManager_)
+		return;
+	GenericObject* ptrToPage = PageList_;
+	while(ptrToPage){
+		PageList_ = ptrToPage;
+		ptrToPage = PageList_->Next;
+		delete [] PageList_;
+	}
 	
 }	
 
-// Take an object from the free list and give it to the client (simulates new)
-// Throws an exception if the object can't be allocated. (Memory allocation problem)
+/**
+ * @fn void* ObjectAllocator::Allocate(const char *label) 
+ * @brief 
+ * 		To allocate fixed-sized memory blocks for a client.
+ * 		Take an object from the free list and give it to the client (simulates new)
+ *		Throws an exception if the object can't be allocated. (Memory allocation problem)
+ * 
+ * @param label 
+ * 		for hbExternal blocks stored in struct MemBlockInfo
+ * @return void* 
+ * 		returns reference to allocated page.
+ */
 void* ObjectAllocator::Allocate(const char *label) {
 
 	if(config_.UseCPPMemManager_){
@@ -114,8 +135,10 @@ void* ObjectAllocator::Allocate(const char *label) {
 		FreeList_ = FreeList_->Next;
 
 		// Process assignment to header block
+		char* ptrToUseCount = NULL;
+		char* ptrToAllocNum = NULL;
 		AllocNum +=1;
-		ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		char* ptrToHeaderBlock = NewObject-config_.PadBytes_ - config_.HBlockInfo_.size_;
 		// Check header block type then assigning pointers
 		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
 			// Assign Extended header
@@ -162,12 +185,20 @@ void* ObjectAllocator::Allocate(const char *label) {
 	else{
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
-	// printf("Object allocated at: %p\n",reinterpret_cast<void*>(NewObject));
 	return reinterpret_cast<void*>(NewObject);
+	// printf("Object allocated at: %p\n",reinterpret_cast<void*>(NewObject));
 }
 
 // Returns an object to the free list for the client (simulates delete)
 // Throws an exception if the the object can't be freed. (Invalid object)
+/**
+ * @fn void ObjectAllocator::Free(void *Object)
+ * @brief 
+ * 		deallocates Object stored in PageList for client, by freeing the block it is in.
+ * 
+ * @param Object 
+ * 		object 
+ */
 void ObjectAllocator::Free(void *Object){
 	
 	if(config_.UseCPPMemManager_){
@@ -237,10 +268,10 @@ void ObjectAllocator::Free(void *Object){
 		FreeList_->Next = temp;
 		temp = NULL;
 
-		ptrToHeaderBlock = reinterpret_cast<char* >(Object)-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		char* ptrToHeaderBlock = reinterpret_cast<char* >(Object)-config_.PadBytes_ - config_.HBlockInfo_.size_;
+		char* ptrToAllocNum = NULL;
 		size_t BytesInBasicBlock;
 		if(config_.HBlockInfo_.type_ == OAConfig::hbExtended){
-			ptrToUseCount = ptrToHeaderBlock + config_.HBlockInfo_.additional_;
 			ptrToAllocNum = ptrToHeaderBlock + config_.HBlockInfo_.additional_ + 2;
 			BytesInBasicBlock = config_.HBlockInfo_.size_-config_.HBlockInfo_.additional_-2;
 		}
@@ -371,7 +402,81 @@ OAStats ObjectAllocator::GetStats() const{
 	return stats_;
 }         
 
+//---------------------------------------------------------------------------
 //Private methods
+
+char* ObjectAllocator::CreateAPage(){
+	try{
+		//1. Request memory for first page
+		NewPage = new char[stats_.PageSize_];
+		GenericObject* oldPage = PageList_;
+		//2. Casting the page to a GenericObject* and adjusting pointers.
+		PageList_ = reinterpret_cast<GenericObject* >(NewPage);
+		PageList_->Next = oldPage;
+		oldPage = NULL;
+		stats_.PagesInUse_ += 1;//update acounting info
+		stats_.FreeObjects_ += config_.ObjectsPerPage_;//update acounting info
+
+
+		//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
+		GenericObject* currentObj = NULL;
+		currentObj = FreeList_;
+		char* NewObject = NewPage + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; // point after page's Next
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
+		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
+		memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
+		memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
+		FreeList_ = reinterpret_cast<GenericObject*>(NewObject);
+		FreeList_->Next = NULL;
+		currentObj = NULL;
+		NewObject = NULL;
+
+		// cast remaining blocks
+		unsigned int countBlocks = config_.ObjectsPerPage_ - 1;
+		while(countBlocks){
+			currentObj = FreeList_;
+			NewObject = reinterpret_cast<char* >(FreeList_); 
+			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
+			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
+			memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
+			memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
+			memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
+			FreeList_ = reinterpret_cast<GenericObject* >(NewObject);
+			FreeList_->Next = currentObj;
+			currentObj = NULL;
+			NewObject = NULL;
+
+			countBlocks--;
+		}
+
+	}
+	catch(std::bad_alloc &){
+		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
+	}
+	return NewPage;
+}
+
+int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const{
+	GenericObject* page = reinterpret_cast<GenericObject*>(p);
+	size_t ObjLowBou;
+	size_t ObjUppBou;
+	while(page){
+		// find right page..
+		ObjLowBou = reinterpret_cast<size_t>(Object) - reinterpret_cast<size_t>(page);
+		ObjUppBou = reinterpret_cast<size_t>(page) + stats_.PageSize_ - reinterpret_cast<size_t>(Object);
+		
+		if(ObjLowBou + ObjUppBou == stats_.PageSize_ && ObjLowBou < stats_.PageSize_){
+			// found right page
+			p = page;
+			return 1;
+		}
+
+		// flip to next page
+		page = page->Next;
+	}
+	return -1; // page not found
+}
+
 
 ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) const{
 	//check left and right pad bytes for pad pattern
@@ -395,26 +500,3 @@ ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) co
 	return ObjectAllocator::NO_CORRUPT; // no corruption
 }
 
-int ObjectAllocator::FindPageByObject(GenericObject* &p, void* Object) const{
-	GenericObject* page = reinterpret_cast<GenericObject*>(p);
-	size_t ObjLowBou;
-	size_t ObjUppBou;
-	while(page){
-		// find right page..
-		// printf("Page123: %p\n", (void*)page);
-		ObjLowBou = reinterpret_cast<size_t>(Object) - reinterpret_cast<size_t>(page);
-		ObjUppBou = reinterpret_cast<size_t>(page) + stats_.PageSize_ - reinterpret_cast<size_t>(Object);
-		// printf("ObjLowBou: %lu   ObjUppBou: %lu\n", ObjLowBou, ObjUppBou);
-		if(ObjLowBou + ObjUppBou == stats_.PageSize_ && ObjLowBou < stats_.PageSize_){
-			// found right page
-			// printf("found page! at %p\n", (void*)(page));
-			p = page;
-			//FoundPage = reinterpret_cast<char*>(page);
-			return 1;
-		}
-
-		// flip to next page
-		page = page->Next;
-	}
-	return -1; // page not found
-}

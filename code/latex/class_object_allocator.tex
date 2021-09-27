@@ -1,0 +1,142 @@
+\hypertarget{class_object_allocator}{}\doxysection{Object\+Allocator Class Reference}
+\label{class_object_allocator}\index{ObjectAllocator@{ObjectAllocator}}
+
+
+{\ttfamily \#include $<$Object\+Allocator.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_object_allocator_ada06077ea9421541d6a645a1b4b8ab91}\label{class_object_allocator_ada06077ea9421541d6a645a1b4b8ab91}} 
+typedef void($\ast$ {\bfseries DUMPCALLBACK}) (const void $\ast$, size\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Callback function when dumping memory leaks. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_a2d25f0741f63762894cf20fcf862ab6f}\label{class_object_allocator_a2d25f0741f63762894cf20fcf862ab6f}} 
+typedef void($\ast$ {\bfseries VALIDATECALLBACK}) (const void $\ast$, size\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Callback function when validating blocks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_object_allocator_a8f579b514d1fe072f6dc54491868289a}{Object\+Allocator}} (size\+\_\+t Object\+Size, const \mbox{\hyperlink{struct_o_a_config}{OAConfig}} \&config)
+\begin{DoxyCompactList}\small\item\em Construct a new Object Allocator\+:\+: Object Allocator object Creates the Object\+Manager per the specified values Throws an exception if the construction fails. (Memory allocation problem) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_a54f72cc0c3da36db8d59ca4ab54e6ecc}\label{class_object_allocator_a54f72cc0c3da36db8d59ca4ab54e6ecc}} 
+{\bfseries $\sim$\+Object\+Allocator} ()
+\begin{DoxyCompactList}\small\item\em Destroy the Object Allocator\+:\+: Object Allocator object. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{class_object_allocator_a9b102fa9a71e7db59f0915f693133622}{Allocate}} (const char $\ast$label=0)
+\begin{DoxyCompactList}\small\item\em To allocate fixed-\/sized memory blocks for a client. Take an object from the free list and give it to the client (simulates new) Throws an exception if the object can\textquotesingle{}t be allocated. (Memory allocation problem) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_allocator_aa0bfa44d53482b826be0f09ee1bb970c}{Free}} (void $\ast$Object)
+\begin{DoxyCompactList}\small\item\em deallocates Object stored in Page\+List for client, by freeing the block it is in. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_ae454b5a4240ee390ad5140016db835df}\label{class_object_allocator_ae454b5a4240ee390ad5140016db835df}} 
+unsigned {\bfseries Dump\+Memory\+In\+Use} (\mbox{\hyperlink{class_object_allocator_ada06077ea9421541d6a645a1b4b8ab91}{DUMPCALLBACK}} fn) const
+\item 
+\mbox{\Hypertarget{class_object_allocator_ad74ae60db01f355cd08e13909a237df5}\label{class_object_allocator_ad74ae60db01f355cd08e13909a237df5}} 
+unsigned {\bfseries Validate\+Pages} (\mbox{\hyperlink{class_object_allocator_a2d25f0741f63762894cf20fcf862ab6f}{VALIDATECALLBACK}} fn) const
+\item 
+\mbox{\Hypertarget{class_object_allocator_a11450c43de55e71244889c930dd6a985}\label{class_object_allocator_a11450c43de55e71244889c930dd6a985}} 
+unsigned {\bfseries Free\+Empty\+Pages} ()
+\item 
+\mbox{\Hypertarget{class_object_allocator_a0d921f5d6ae2a300feb18c7efa874ad3}\label{class_object_allocator_a0d921f5d6ae2a300feb18c7efa874ad3}} 
+void {\bfseries Set\+Debug\+State} (bool State)
+\item 
+\mbox{\Hypertarget{class_object_allocator_ae820ca0c75551adea160e9634f2ef459}\label{class_object_allocator_ae820ca0c75551adea160e9634f2ef459}} 
+const void $\ast$ {\bfseries Get\+Free\+List} () const
+\item 
+\mbox{\Hypertarget{class_object_allocator_ade8a943b51bc8d4f0c79ffb964d8baa2}\label{class_object_allocator_ade8a943b51bc8d4f0c79ffb964d8baa2}} 
+const void $\ast$ {\bfseries Get\+Page\+List} () const
+\item 
+\mbox{\Hypertarget{class_object_allocator_a23bbd1cb3b4e5d191bdcc8c0fc43534b}\label{class_object_allocator_a23bbd1cb3b4e5d191bdcc8c0fc43534b}} 
+\mbox{\hyperlink{struct_o_a_config}{OAConfig}} {\bfseries Get\+Config} () const
+\item 
+\mbox{\Hypertarget{class_object_allocator_a81de3346d1af09cc74ba0852170608a3}\label{class_object_allocator_a81de3346d1af09cc74ba0852170608a3}} 
+\mbox{\hyperlink{struct_o_a_stats}{OAStats}} {\bfseries Get\+Stats} () const
+\item 
+\mbox{\Hypertarget{class_object_allocator_aa33d04d26e045e4ac6eff07fa78b25fd}\label{class_object_allocator_aa33d04d26e045e4ac6eff07fa78b25fd}} 
+{\bfseries Object\+Allocator} (const \mbox{\hyperlink{class_object_allocator}{Object\+Allocator}} \&oa)=delete
+\begin{DoxyCompactList}\small\item\em Do not implement! \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_a04da7cd5ee3c8b57bfc6e3c64263da8a}\label{class_object_allocator_a04da7cd5ee3c8b57bfc6e3c64263da8a}} 
+\mbox{\hyperlink{class_object_allocator}{Object\+Allocator}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_object_allocator}{Object\+Allocator}} \&oa)=delete
+\begin{DoxyCompactList}\small\item\em Do not implement! \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_object_allocator_a41c6ff61d0f553ddb7ee1942ff02752b}\label{class_object_allocator_a41c6ff61d0f553ddb7ee1942ff02752b}} 
+static const unsigned char {\bfseries UNALLOCATED\+\_\+\+PATTERN} = 0x\+AA
+\begin{DoxyCompactList}\small\item\em New memory never given to the client. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_aef36599808e28924faa018bc08435ca0}\label{class_object_allocator_aef36599808e28924faa018bc08435ca0}} 
+static const unsigned char {\bfseries ALLOCATED\+\_\+\+PATTERN} = 0x\+BB
+\begin{DoxyCompactList}\small\item\em Memory owned by the client. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_ad0a3b63c24b19422109ee940cdfc0475}\label{class_object_allocator_ad0a3b63c24b19422109ee940cdfc0475}} 
+static const unsigned char {\bfseries FREED\+\_\+\+PATTERN} = 0x\+CC
+\begin{DoxyCompactList}\small\item\em Memory returned by the client. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_a81447b175985013c4339c42f6adc42aa}\label{class_object_allocator_a81447b175985013c4339c42f6adc42aa}} 
+static const unsigned char {\bfseries PAD\+\_\+\+PATTERN} = 0x\+DD
+\begin{DoxyCompactList}\small\item\em Pad signature to detect buffer over/under flow. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_object_allocator_ac4e9b2ce134baaafc6eb82b6e0dfeb44}\label{class_object_allocator_ac4e9b2ce134baaafc6eb82b6e0dfeb44}} 
+static const unsigned char {\bfseries ALIGN\+\_\+\+PATTERN} = 0x\+EE
+\begin{DoxyCompactList}\small\item\em For the alignment bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class represents a custom memory manager 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_object_allocator_a8f579b514d1fe072f6dc54491868289a}\label{class_object_allocator_a8f579b514d1fe072f6dc54491868289a}} 
+\index{ObjectAllocator@{ObjectAllocator}!ObjectAllocator@{ObjectAllocator}}
+\index{ObjectAllocator@{ObjectAllocator}!ObjectAllocator@{ObjectAllocator}}
+\doxysubsubsection{\texorpdfstring{ObjectAllocator()}{ObjectAllocator()}}
+{\footnotesize\ttfamily Object\+Allocator\+::\+Object\+Allocator (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{Object\+Size,  }\item[{const \mbox{\hyperlink{struct_o_a_config}{OAConfig}} \&}]{config }\end{DoxyParamCaption})}
+
+
+
+Construct a new Object Allocator\+:\+: Object Allocator object Creates the Object\+Manager per the specified values Throws an exception if the construction fails. (Memory allocation problem) 
+
+\+: config\+\_\+(config), stats\+\_\+(), OAException\+\_\+()
+
+
+\begin{DoxyParams}{Parameters}
+{\em Object\+Size} & Size of Object\\
+\hline
+{\em config} & an custom struct \mbox{\hyperlink{struct_o_a_config}{OAConfig}} that contains configuration of Memory Manager \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_object_allocator_a9b102fa9a71e7db59f0915f693133622}\label{class_object_allocator_a9b102fa9a71e7db59f0915f693133622}} 
+\index{ObjectAllocator@{ObjectAllocator}!Allocate@{Allocate}}
+\index{Allocate@{Allocate}!ObjectAllocator@{ObjectAllocator}}
+\doxysubsubsection{\texorpdfstring{Allocate()}{Allocate()}}
+{\footnotesize\ttfamily void $\ast$ Object\+Allocator\+::\+Allocate (\begin{DoxyParamCaption}\item[{const char $\ast$}]{label = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+To allocate fixed-\/sized memory blocks for a client. Take an object from the free list and give it to the client (simulates new) Throws an exception if the object can\textquotesingle{}t be allocated. (Memory allocation problem) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em label} & for hb\+External blocks stored in struct \mbox{\hyperlink{struct_mem_block_info}{Mem\+Block\+Info}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void$\ast$ returns reference to allocated page. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_object_allocator_aa0bfa44d53482b826be0f09ee1bb970c}\label{class_object_allocator_aa0bfa44d53482b826be0f09ee1bb970c}} 
+\index{ObjectAllocator@{ObjectAllocator}!Free@{Free}}
+\index{Free@{Free}!ObjectAllocator@{ObjectAllocator}}
+\doxysubsubsection{\texorpdfstring{Free()}{Free()}}
+{\footnotesize\ttfamily void Object\+Allocator\+::\+Free (\begin{DoxyParamCaption}\item[{void $\ast$}]{Object }\end{DoxyParamCaption})}
+
+
+
+deallocates Object stored in Page\+List for client, by freeing the block it is in. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Object} & object \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_object_allocator_8h}{Object\+Allocator.\+h}}\item 
+\mbox{\hyperlink{_object_allocator_8cpp}{Object\+Allocator.\+cpp}}\end{DoxyCompactItemize}

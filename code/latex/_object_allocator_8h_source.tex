@@ -1,0 +1,205 @@
+\hypertarget{_object_allocator_8h_source}{}\doxysection{Object\+Allocator.\+h}
+\mbox{\hyperlink{_object_allocator_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{38 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#ifndef OBJECTALLOCATORH}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define OBJECTALLOCATORH}}
+\DoxyCodeLine{41 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{comment}{// If the client doesn't specify these:}}
+\DoxyCodeLine{48 \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{int} DEFAULT\_OBJECTS\_PER\_PAGE = 4;  }
+\DoxyCodeLine{49 \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{int} DEFAULT\_MAX\_PAGES = 3;}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{54 \textcolor{keyword}{class }\mbox{\hyperlink{class_o_a_exception}{OAException}}}
+\DoxyCodeLine{55 \{}
+\DoxyCodeLine{56   \textcolor{keyword}{public}:}
+\DoxyCodeLine{60     \textcolor{keyword}{enum} \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\_EXCEPTION}} }
+\DoxyCodeLine{61     \{}
+\DoxyCodeLine{62       \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae18f5cbb3503fde484739545afcc9161}{E\_NO\_MEMORY}},      }
+\DoxyCodeLine{63       \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a00b488cc53e8fb49d4b2dd75291b7f82}{E\_NO\_PAGES}},       }
+\DoxyCodeLine{64       \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a8c562017500215f88c804392775c6b1b}{E\_BAD\_BOUNDARY}},   }
+\DoxyCodeLine{65       \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32a2123fdbb5bd50beb07f893ac38688bce}{E\_MULTIPLE\_FREE}},  }
+\DoxyCodeLine{66       \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32ae4bfdc0e26752fbd32d5fdfe183e52c0}{E\_CORRUPTED\_BLOCK}} }
+\DoxyCodeLine{67     \};}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{78     \mbox{\hyperlink{class_o_a_exception_a80250ef41d10e8f7e73b9601ca3cdf3d}{OAException}}(\mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\_EXCEPTION}} ErrCode, \textcolor{keyword}{const} std::string\& Message) : error\_code\_(ErrCode), message\_(Message) \{\};}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{83     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_o_a_exception_a3fa19a5710a642ea888d6bd86cc79e3b}{\string~OAException}}() \{}
+\DoxyCodeLine{84     \}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{92     \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\_EXCEPTION}} \mbox{\hyperlink{class_o_a_exception_ab005e5c84550ee610fbc08272477c1bb}{code}}()\textcolor{keyword}{ const }\{ }
+\DoxyCodeLine{93       \textcolor{keywordflow}{return} error\_code\_; }
+\DoxyCodeLine{94     \}}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{102     \textcolor{keyword}{virtual} \textcolor{keyword}{const} \textcolor{keywordtype}{char} *\mbox{\hyperlink{class_o_a_exception_a1bef666763256021c1fb1074ec0b7ed9}{what}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{103       \textcolor{keywordflow}{return} message\_.c\_str();}
+\DoxyCodeLine{104     \}}
+\DoxyCodeLine{105   \textcolor{keyword}{private}:  }
+\DoxyCodeLine{106     \mbox{\hyperlink{class_o_a_exception_a7b7c4b5031a4f065e894d02ac7c97a32}{OA\_EXCEPTION}} error\_code\_; }
+\DoxyCodeLine{107     std::string message\_;     }
+\DoxyCodeLine{108 \};}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 }
+\DoxyCodeLine{114 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_o_a_config}{OAConfig}}}
+\DoxyCodeLine{115 \{}
+\DoxyCodeLine{116   \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_o_a_config_a4474c8412a0fc66a4d990dcb6b544299}{BASIC\_HEADER\_SIZE}} = \textcolor{keyword}{sizeof}(unsigned) + 1; }
+\DoxyCodeLine{117   \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_o_a_config_a6da9f1d439103801855d9053107a6410}{EXTERNAL\_HEADER\_SIZE}} = \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{void}*);     }
+\DoxyCodeLine{118 }
+\DoxyCodeLine{122   \textcolor{keyword}{enum} \mbox{\hyperlink{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}{HBLOCK\_TYPE}}\{hbNone, hbBasic, hbExtended, hbExternal\};}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{127   \textcolor{keyword}{struct }\mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{HeaderBlockInfo}}}
+\DoxyCodeLine{128   \{}
+\DoxyCodeLine{129     \mbox{\hyperlink{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}{HBLOCK\_TYPE}} \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_a475b9a930ba8b63c1244ad7308467cfc}{type\_}};  }
+\DoxyCodeLine{130     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_ac18553c734c873e7bc1efb0e4c62d3e8}{size\_}};       }
+\DoxyCodeLine{131     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_af99732e7667a763d1eeb454b3f15fb32}{additional\_}}; }
+\DoxyCodeLine{132 }
+\DoxyCodeLine{143     \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_a4cf2cea9fdd52fec942d0746f094e5f8}{HeaderBlockInfo}}(\mbox{\hyperlink{struct_o_a_config_a741c6dd161c0174180cc17f9a697b123}{HBLOCK\_TYPE}} type = hbNone, \textcolor{keywordtype}{unsigned} additional = 0) : \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_a475b9a930ba8b63c1244ad7308467cfc}{type\_}}(type), \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_ac18553c734c873e7bc1efb0e4c62d3e8}{size\_}}(0), \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_af99732e7667a763d1eeb454b3f15fb32}{additional\_}}(additional)}
+\DoxyCodeLine{144     \{}
+\DoxyCodeLine{145       \textcolor{keywordflow}{if} (\mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_a475b9a930ba8b63c1244ad7308467cfc}{type\_}} == hbBasic)}
+\DoxyCodeLine{146         \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_ac18553c734c873e7bc1efb0e4c62d3e8}{size\_}} = \mbox{\hyperlink{struct_o_a_config_a4474c8412a0fc66a4d990dcb6b544299}{BASIC\_HEADER\_SIZE}};}
+\DoxyCodeLine{147       \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_a475b9a930ba8b63c1244ad7308467cfc}{type\_}} == hbExtended) \textcolor{comment}{// alloc \# + use counter + flag byte + user-\/defined}}
+\DoxyCodeLine{148         \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_ac18553c734c873e7bc1efb0e4c62d3e8}{size\_}} = \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned} int) + \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short}) + \textcolor{keyword}{sizeof}(char) + \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_af99732e7667a763d1eeb454b3f15fb32}{additional\_}};}
+\DoxyCodeLine{149       \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_a475b9a930ba8b63c1244ad7308467cfc}{type\_}} == hbExternal)}
+\DoxyCodeLine{150         \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info_ac18553c734c873e7bc1efb0e4c62d3e8}{size\_}} = \mbox{\hyperlink{struct_o_a_config_a6da9f1d439103801855d9053107a6410}{EXTERNAL\_HEADER\_SIZE}};}
+\DoxyCodeLine{151     \};}
+\DoxyCodeLine{152   \};}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{179   \mbox{\hyperlink{struct_o_a_config_a036df6b3c5cefef38274637926155397}{OAConfig}}(\textcolor{keywordtype}{bool} UseCPPMemManager = \textcolor{keyword}{false},}
+\DoxyCodeLine{180            \textcolor{keywordtype}{unsigned} ObjectsPerPage = DEFAULT\_OBJECTS\_PER\_PAGE, }
+\DoxyCodeLine{181            \textcolor{keywordtype}{unsigned} MaxPages = DEFAULT\_MAX\_PAGES, }
+\DoxyCodeLine{182            \textcolor{keywordtype}{bool} DebugOn = \textcolor{keyword}{false}, }
+\DoxyCodeLine{183            \textcolor{keywordtype}{unsigned} PadBytes = 0,}
+\DoxyCodeLine{184            \textcolor{keyword}{const} \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{HeaderBlockInfo}} \&HBInfo = \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{HeaderBlockInfo}}(),}
+\DoxyCodeLine{185            \textcolor{keywordtype}{unsigned} Alignment = 0) : \mbox{\hyperlink{struct_o_a_config_a864194ead28278f7907d50115c926050}{UseCPPMemManager\_}}(UseCPPMemManager),}
+\DoxyCodeLine{186                                      \mbox{\hyperlink{struct_o_a_config_a22f5e834a557272ed3fdf3c7a77f2073}{ObjectsPerPage\_}}(ObjectsPerPage), }
+\DoxyCodeLine{187                                      \mbox{\hyperlink{struct_o_a_config_a345e27c350d84f467952bca70d3c14c1}{MaxPages\_}}(MaxPages), }
+\DoxyCodeLine{188                                      \mbox{\hyperlink{struct_o_a_config_a0d0250be37964f50c3015b53fa0740d2}{DebugOn\_}}(DebugOn), }
+\DoxyCodeLine{189                                      \mbox{\hyperlink{struct_o_a_config_a3b470e4ab11955cbdc2b0c2df5cf19ba}{PadBytes\_}}(PadBytes),}
+\DoxyCodeLine{190                                      \mbox{\hyperlink{struct_o_a_config_a1035d7e9e4addd8b58eacc88dca876cd}{HBlockInfo\_}}(HBInfo),}
+\DoxyCodeLine{191                                      \mbox{\hyperlink{struct_o_a_config_a633e04ed09fb16dd216d20abff4b9ffc}{Alignment\_}}(Alignment)}
+\DoxyCodeLine{192   \{}
+\DoxyCodeLine{193     \mbox{\hyperlink{struct_o_a_config_a1035d7e9e4addd8b58eacc88dca876cd}{HBlockInfo\_}} = HBInfo;}
+\DoxyCodeLine{194     \mbox{\hyperlink{struct_o_a_config_af12cbdd25e5c6666c86e55cbcaffbdd8}{LeftAlignSize\_}} = 0;  }
+\DoxyCodeLine{195     \mbox{\hyperlink{struct_o_a_config_a5dc031628a98d0e68795a0bb68bc53ee}{InterAlignSize\_}} = 0;}
+\DoxyCodeLine{196   \}}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198   \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_o_a_config_a864194ead28278f7907d50115c926050}{UseCPPMemManager\_}};      }
+\DoxyCodeLine{199   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_config_a22f5e834a557272ed3fdf3c7a77f2073}{ObjectsPerPage\_}};    }
+\DoxyCodeLine{200   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_config_a345e27c350d84f467952bca70d3c14c1}{MaxPages\_}};          }
+\DoxyCodeLine{201   \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_o_a_config_a0d0250be37964f50c3015b53fa0740d2}{DebugOn\_}};               }
+\DoxyCodeLine{202   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_config_a3b470e4ab11955cbdc2b0c2df5cf19ba}{PadBytes\_}};          }
+\DoxyCodeLine{203   \mbox{\hyperlink{struct_o_a_config_1_1_header_block_info}{HeaderBlockInfo}} \mbox{\hyperlink{struct_o_a_config_a1035d7e9e4addd8b58eacc88dca876cd}{HBlockInfo\_}}; }
+\DoxyCodeLine{204   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_config_a633e04ed09fb16dd216d20abff4b9ffc}{Alignment\_}};         }
+\DoxyCodeLine{205   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_config_af12cbdd25e5c6666c86e55cbcaffbdd8}{LeftAlignSize\_}};     }
+\DoxyCodeLine{206   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_config_a5dc031628a98d0e68795a0bb68bc53ee}{InterAlignSize\_}};    }
+\DoxyCodeLine{207 \};}
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209 }
+\DoxyCodeLine{213 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_o_a_stats}{OAStats}}}
+\DoxyCodeLine{214 \{}
+\DoxyCodeLine{218   \mbox{\hyperlink{struct_o_a_stats_a5abcd9bec0b789fa2b2811073f61708d}{OAStats}}() : \mbox{\hyperlink{struct_o_a_stats_a294ec0047fece90e9e4970e611522dfc}{ObjectSize\_}}(0), \mbox{\hyperlink{struct_o_a_stats_a0c3f00ddde8a85cabbc3e0b552533872}{PageSize\_}}(0), \mbox{\hyperlink{struct_o_a_stats_a70c1dc51d208c7f074234adfb6e9aeef}{FreeObjects\_}}(0), \mbox{\hyperlink{struct_o_a_stats_a35d2f124ea86392b4a9601647aeba597}{ObjectsInUse\_}}(0), \mbox{\hyperlink{struct_o_a_stats_a215702d960001b3e9149ed003f9ceba8}{PagesInUse\_}}(0),}
+\DoxyCodeLine{219                   \mbox{\hyperlink{struct_o_a_stats_ae4c86ba164d10c52d07b64060bd37a4b}{MostObjects\_}}(0), \mbox{\hyperlink{struct_o_a_stats_af03c3da81212bd689b962e36711a3298}{Allocations\_}}(0), \mbox{\hyperlink{struct_o_a_stats_a1320e1e8baf9a33b5bdf87145f4d4b27}{Deallocations\_}}(0) \{\};}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{221   \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_o_a_stats_a294ec0047fece90e9e4970e611522dfc}{ObjectSize\_}};      }
+\DoxyCodeLine{222   \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_o_a_stats_a0c3f00ddde8a85cabbc3e0b552533872}{PageSize\_}};        }
+\DoxyCodeLine{223   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_stats_a70c1dc51d208c7f074234adfb6e9aeef}{FreeObjects\_}};   }
+\DoxyCodeLine{224   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_stats_a35d2f124ea86392b4a9601647aeba597}{ObjectsInUse\_}};  }
+\DoxyCodeLine{225   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_stats_a215702d960001b3e9149ed003f9ceba8}{PagesInUse\_}};    }
+\DoxyCodeLine{226   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_stats_ae4c86ba164d10c52d07b64060bd37a4b}{MostObjects\_}};   }
+\DoxyCodeLine{227   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_stats_af03c3da81212bd689b962e36711a3298}{Allocations\_}};   }
+\DoxyCodeLine{228   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_o_a_stats_a1320e1e8baf9a33b5bdf87145f4d4b27}{Deallocations\_}}; }
+\DoxyCodeLine{229 \};}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{234 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_generic_object}{GenericObject}}}
+\DoxyCodeLine{235 \{}
+\DoxyCodeLine{236   \mbox{\hyperlink{struct_generic_object}{GenericObject}} *\mbox{\hyperlink{struct_generic_object_a7c680fad98f506bf301e645ebb1b453e}{Next}}; }
+\DoxyCodeLine{237 \};}
+\DoxyCodeLine{238 }
+\DoxyCodeLine{242 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_mem_block_info}{MemBlockInfo}}}
+\DoxyCodeLine{243 \{}
+\DoxyCodeLine{244   \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_mem_block_info_a6a2898598d9e106c34df94961bb08fc8}{in\_use}};        }
+\DoxyCodeLine{245   \textcolor{keywordtype}{char} *\mbox{\hyperlink{struct_mem_block_info_ac92dcd55e4d9f19752f883174354f7d4}{label}};        }
+\DoxyCodeLine{246   \textcolor{keywordtype}{unsigned} \mbox{\hyperlink{struct_mem_block_info_abf028a52d7595ad36098b3cc8da0c687}{alloc\_num}}; }
+\DoxyCodeLine{247 \};}
+\DoxyCodeLine{248 }
+\DoxyCodeLine{252 \textcolor{keyword}{class }\mbox{\hyperlink{class_object_allocator}{ObjectAllocator}}}
+\DoxyCodeLine{253 \{}
+\DoxyCodeLine{254   \textcolor{keyword}{public}:}
+\DoxyCodeLine{255       \textcolor{comment}{// Defined by the client (pointer to a block, size of block)}}
+\DoxyCodeLine{256     \textcolor{keyword}{typedef} void (*\mbox{\hyperlink{class_object_allocator_ada06077ea9421541d6a645a1b4b8ab91}{DUMPCALLBACK}})(\textcolor{keyword}{const} \textcolor{keywordtype}{void} *, size\_t);     }
+\DoxyCodeLine{257     \textcolor{keyword}{typedef} void (*\mbox{\hyperlink{class_object_allocator_a2d25f0741f63762894cf20fcf862ab6f}{VALIDATECALLBACK}})(\textcolor{keyword}{const} \textcolor{keywordtype}{void} *, size\_t); }
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259       \textcolor{comment}{// Predefined values for memory signatures}}
+\DoxyCodeLine{260     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{class_object_allocator_a41c6ff61d0f553ddb7ee1942ff02752b}{UNALLOCATED\_PATTERN}} = 0xAA; }
+\DoxyCodeLine{261     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{class_object_allocator_aef36599808e28924faa018bc08435ca0}{ALLOCATED\_PATTERN}} =   0xBB; }
+\DoxyCodeLine{262     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{class_object_allocator_ad0a3b63c24b19422109ee940cdfc0475}{FREED\_PATTERN}} =       0xCC; }
+\DoxyCodeLine{263     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{class_object_allocator_a81447b175985013c4339c42f6adc42aa}{PAD\_PATTERN}} =         0xDD; }
+\DoxyCodeLine{264     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{class_object_allocator_ac4e9b2ce134baaafc6eb82b6e0dfeb44}{ALIGN\_PATTERN}} =       0xEE; }
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266       \textcolor{comment}{// Creates the ObjectManager per the specified values}}
+\DoxyCodeLine{267       \textcolor{comment}{// Throws an exception if the construction fails. (Memory allocation problem)}}
+\DoxyCodeLine{268     \mbox{\hyperlink{class_object_allocator_a8f579b514d1fe072f6dc54491868289a}{ObjectAllocator}}(\textcolor{keywordtype}{size\_t} ObjectSize, \textcolor{keyword}{const} \mbox{\hyperlink{struct_o_a_config}{OAConfig}}\& config);}
+\DoxyCodeLine{269 }
+\DoxyCodeLine{270       \textcolor{comment}{// Destroys the ObjectManager (never throws)}}
+\DoxyCodeLine{271     \mbox{\hyperlink{class_object_allocator_a54f72cc0c3da36db8d59ca4ab54e6ecc}{\string~ObjectAllocator}}();}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273       \textcolor{comment}{// Take an object from the free list and give it to the client (simulates new)}}
+\DoxyCodeLine{274       \textcolor{comment}{// Throws an exception if the object can't be allocated. (Memory allocation problem)}}
+\DoxyCodeLine{275     \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_object_allocator_a9b102fa9a71e7db59f0915f693133622}{Allocate}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *label = 0);}
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277       \textcolor{comment}{// Returns an object to the free list for the client (simulates delete)}}
+\DoxyCodeLine{278       \textcolor{comment}{// Throws an exception if the the object can't be freed. (Invalid object)}}
+\DoxyCodeLine{279     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_object_allocator_aa0bfa44d53482b826be0f09ee1bb970c}{Free}}(\textcolor{keywordtype}{void} *Object);}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281       \textcolor{comment}{// Calls the callback fn for each block still in use}}
+\DoxyCodeLine{282     \textcolor{keywordtype}{unsigned} DumpMemoryInUse(\mbox{\hyperlink{class_object_allocator_ada06077ea9421541d6a645a1b4b8ab91}{DUMPCALLBACK}} fn) \textcolor{keyword}{const};}
+\DoxyCodeLine{283 }
+\DoxyCodeLine{284       \textcolor{comment}{// Calls the callback fn for each block that is potentially corrupted}}
+\DoxyCodeLine{285     \textcolor{keywordtype}{unsigned} ValidatePages(\mbox{\hyperlink{class_object_allocator_a2d25f0741f63762894cf20fcf862ab6f}{VALIDATECALLBACK}} fn) \textcolor{keyword}{const};}
+\DoxyCodeLine{286 }
+\DoxyCodeLine{287       \textcolor{comment}{// Frees all empty page}}
+\DoxyCodeLine{288     \textcolor{keywordtype}{unsigned} FreeEmptyPages();}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{290       \textcolor{comment}{// Testing/Debugging/Statistic methods}}
+\DoxyCodeLine{291     \textcolor{keywordtype}{void} SetDebugState(\textcolor{keywordtype}{bool} State);   \textcolor{comment}{// true=enable, false=disable}}
+\DoxyCodeLine{292     \textcolor{keyword}{const} \textcolor{keywordtype}{void} *GetFreeList() \textcolor{keyword}{const};  \textcolor{comment}{// returns a pointer to the internal free list}}
+\DoxyCodeLine{293     \textcolor{keyword}{const} \textcolor{keywordtype}{void} *GetPageList() \textcolor{keyword}{const};  \textcolor{comment}{// returns a pointer to the internal page list}}
+\DoxyCodeLine{294     \mbox{\hyperlink{struct_o_a_config}{OAConfig}} GetConfig() \textcolor{keyword}{const};       \textcolor{comment}{// returns the configuration parameters}}
+\DoxyCodeLine{295     \mbox{\hyperlink{struct_o_a_stats}{OAStats}} GetStats() \textcolor{keyword}{const};         \textcolor{comment}{// returns the statistics for the allocator}}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297       \textcolor{comment}{// Prevent copy construction and assignment}}
+\DoxyCodeLine{298     \mbox{\hyperlink{class_object_allocator_aa33d04d26e045e4ac6eff07fa78b25fd}{ObjectAllocator}}(\textcolor{keyword}{const} \mbox{\hyperlink{class_object_allocator}{ObjectAllocator}} \&oa) = \textcolor{keyword}{delete};            }
+\DoxyCodeLine{299     \mbox{\hyperlink{class_object_allocator}{ObjectAllocator}} \&\mbox{\hyperlink{class_object_allocator_a04da7cd5ee3c8b57bfc6e3c64263da8a}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{class_object_allocator}{ObjectAllocator}} \&oa) = \textcolor{keyword}{delete}; }
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301   \textcolor{keyword}{private}:}
+\DoxyCodeLine{302       \textcolor{comment}{// Some "{}suggested"{} members (only a suggestion!)}}
+\DoxyCodeLine{303     \mbox{\hyperlink{struct_generic_object}{GenericObject}} *PageList\_; }
+\DoxyCodeLine{304     \mbox{\hyperlink{struct_generic_object}{GenericObject}} *FreeList\_; }
+\DoxyCodeLine{305     }
+\DoxyCodeLine{306     \textcolor{comment}{// Lots of other private stuff... }}
+\DoxyCodeLine{307     \mbox{\hyperlink{struct_o_a_config}{OAConfig}} config\_;}
+\DoxyCodeLine{308     \mbox{\hyperlink{struct_o_a_stats}{OAStats}} stats\_;}
+\DoxyCodeLine{309     \mbox{\hyperlink{class_o_a_exception}{OAException}}* OAException\_;}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311     \textcolor{keywordtype}{long} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} AllocNum;}
+\DoxyCodeLine{312     \textcolor{keywordtype}{char}* NewPage;}
+\DoxyCodeLine{313     \textcolor{keywordtype}{char}* NewObject;}
+\DoxyCodeLine{314     \textcolor{keywordtype}{char}* lowerBoundary;}
+\DoxyCodeLine{315       \textcolor{keywordtype}{char}* upperBoundary;}
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} ZERO\_PATTERN =       0x00; }
+\DoxyCodeLine{318     \textcolor{keyword}{enum} PaddState\{ NO\_CORRUPT, CORRUPT\_LEFT, CORRUPT\_RIGHT\}padState\_;}
+\DoxyCodeLine{319     \textcolor{keywordtype}{char}* CreateAPage();}
+\DoxyCodeLine{320     \textcolor{keywordtype}{int} FindPageByObject(\mbox{\hyperlink{struct_generic_object}{GenericObject}}* \&page, \textcolor{keywordtype}{void}* Object) \textcolor{keyword}{const};}
+\DoxyCodeLine{321     ObjectAllocator::PaddState isPadCorrupted(\textcolor{keywordtype}{void}* ptrToBlock) \textcolor{keyword}{const};}
+\DoxyCodeLine{322 }
+\DoxyCodeLine{323 \};}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
