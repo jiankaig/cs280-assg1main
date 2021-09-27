@@ -24,14 +24,16 @@
  *      GetStats
  * 
  *    Private methods include:
+ *      checkObjectForPattern
  * 		ComputeAlign_
  *      CreateAPage
  *      FindPageByObject
  *      isPadCorrupted
- *      isObjectFreedAlready
+ * 		isPageEmpty
  *    Hours spent on this assignment: 60
  *    Specific portions that gave you the most trouble: optimisation of free.
- * @version 0.1
+ * @version 0.1 20 tests run/16 tests passed
+ * @version 0.2 20 tests run/19 tests passed
  * @date 2021-09-26
  * 
  * @copyright Copyright (c) 2021
@@ -61,7 +63,7 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	FreeList_ = NULL;
 	PageList_ = NULL;
 
-	//ComputeAlign_();
+	ComputeAlign_();
 	
 	stats_.ObjectSize_ = ObjectSize;
 	stats_.PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
@@ -70,6 +72,9 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 		+ config_.LeftAlignSize_ + (config_.ObjectsPerPage_ - 1) * config_.InterAlignSize_;
 	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
 	
+	sizeof_LeftmostBlock = sizeof(void*) + config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.LeftAlignSize_;
+	sizeof_InnerBlock = stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.InterAlignSize_;
+
 	if(!config_.UseCPPMemManager_){
 		// create if not using standard new/delete
 		lowerBoundary = CreateAPage();
@@ -158,7 +163,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 			// allocate External header
 			MemBlockInfo* ptrHbExternal = NULL;
 			try{
-				ptrHbExternal = new MemBlockInfo();
+				ptrHbExternal = new MemBlockInfo();  // should free this??
 			}
 			catch(std::bad_alloc &){
 				throw OAException(OAException::E_NO_MEMORY, 
@@ -177,7 +182,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 		}
 		
 		//process byte pattern for Object space as "allocated"
-		memset(NewObject , ALLOCATED_PATTERN, stats_.ObjectSize_ );
+		memset(NewObject, ALLOCATED_PATTERN, stats_.ObjectSize_);
 		//update acounting info
 		stats_.ObjectsInUse_ += 1;
 		stats_.FreeObjects_ -= 1;
@@ -190,7 +195,6 @@ void* ObjectAllocator::Allocate(const char *label) {
 		throw OAException(OAException::E_NO_MEMORY, "allocate_new_page: No system memory available.");
 	}
 	return reinterpret_cast<void*>(NewObject);
-	// printf("Object allocated at: %p\n",reinterpret_cast<void*>(NewObject));
 }
 
 // Returns an object to the free list for the client (simulates delete)
@@ -214,7 +218,7 @@ void ObjectAllocator::Free(void *Object){
 
 	//check for "double free"
 	char* ptrToObject = reinterpret_cast<char*>(Object);
-	bool bNoDoubleFree = isObjectFreedAlready(ptrToObject);
+	bool bNoDoubleFree = !checkObjectForPattern(ptrToObject, FREED_PATTERN);
 
 	//check if page can be found
 	GenericObject* page = PageList_;
@@ -224,8 +228,7 @@ void ObjectAllocator::Free(void *Object){
 	
 	//check if object is aligned and base case
 	size_t ObjectPosition = (size_t)Object - (size_t)page;
-	bool isAligned = ((ObjectPosition - 8 - config_.PadBytes_ - config_.HBlockInfo_.size_)  
-					% (stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_))  == 0;
+	bool isAligned = ((ObjectPosition - sizeof_LeftmostBlock) % sizeof_InnerBlock)  == 0;
 	bool baseCase = ObjectPosition % stats_.PageSize_ == 0; //special case
 	if(!isAligned || baseCase){
 		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. mis-alignment ");
@@ -304,7 +307,7 @@ unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
 	while(page){
 		//loop through each block in page
 		// char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; //firstblock
-		char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + OAConfig::BASIC_HEADER_SIZE; //firstblock
+		char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + OAConfig::BASIC_HEADER_SIZE + config_.PadBytes_ + config_.LeftAlignSize_; //firstblock
 		char* ptrToHeaderBlock;
 		bool in_use=false;
 		for(int i=0;i<DEFAULT_OBJECTS_PER_PAGE;i++){
@@ -377,7 +380,6 @@ unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
 			ptrToBlock = ptrToBlock + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
 			
 		}
-		//printf("page: %p, %p",(void*)page, (void*)page->Next);
 		page = page->Next;
 	}
 	return numOfCorrupt;
@@ -387,13 +389,40 @@ unsigned ObjectAllocator::ValidatePages(VALIDATECALLBACK fn) const{
  * @fn unsigned ObjectAllocator::FreeEmptyPages()
  * @brief 
  * 		This function frees and deallocate all empty pages
- * 		This function is not implemented to match extra credit test cases
  * 
  * @return unsigned 
  * 		Return number of free pages
  */
 unsigned ObjectAllocator::FreeEmptyPages(){
-	return 0;
+	unsigned freedEmptyPages = 0; //number of empty pages freed
+	GenericObject* ptrToPage = PageList_;
+	GenericObject* ptrToPreviousPage = ptrToPage;
+	GenericObject* PageToDelete = NULL;
+	size_t count = 0;
+
+	while(ptrToPage){
+		count++; // general purpose indexing
+		
+		if(isPageEmpty(ptrToPage)){
+			ptrToPreviousPage->Next = ptrToPage->Next; //link previous page to following page
+			freedEmptyPages++;
+			stats_.FreeObjects_ -= config_.ObjectsPerPage_;
+			stats_.PagesInUse_--;
+			PageToDelete = ptrToPage;
+		}
+
+		ptrToPreviousPage = ptrToPage;
+		ptrToPage = ptrToPage->Next; // flip to next page
+		if((count == 1) && (PageToDelete)){
+			//base case, re-point PageList if first page is to be deleted
+			PageList_ = ptrToPage;
+		}
+		if(!PageToDelete) //delete page if NULL
+			delete [] PageToDelete;
+		PageToDelete = NULL;
+	}
+
+	return freedEmptyPages;
 }
 
 /**
@@ -455,6 +484,37 @@ OAStats ObjectAllocator::GetStats() const{
 }         
 
 /**
+ * @fn bool ObjectAllocator::checkObjectForPattern(void* ptrToBlock) const
+ * @brief 
+ * 		helper function that checks if object's for memory signatures
+ * @param ptrToBlock 
+ * 		pointer to object to be checked with
+ * @param pattern 
+ * 		memory signature to be checked for
+ * @return true 
+ * 		if object contains pattern at every byte in data
+ * @return false 
+ * 		if object doesnt contain parttern
+ */
+bool ObjectAllocator::checkObjectForPattern(void* ptrToBlock, const unsigned char pattern) const{
+	//check object for freed pattern
+	char* ptrToData = reinterpret_cast<char*>(ptrToBlock) + sizeof(void*); 
+	
+	size_t count = stats_.ObjectSize_ - sizeof(void*);
+	size_t countToCheck = count;
+	size_t countTocount = 0;
+	while(count){
+		if(static_cast<unsigned char>(*ptrToData) == pattern)
+			countTocount++; // count number of times pattern was found
+		count--;
+	}
+	if(countTocount == countToCheck){
+		return true; // when pattern is found in every byte checked
+	}
+	return false; //pattern not completely found
+}
+
+/**
  * @fn void ObjectAllocator::ComputeAlign_()
  * @brief 
  * 		This helper function helps to compute the alignment of the memory block.
@@ -510,11 +570,13 @@ char* ObjectAllocator::CreateAPage(){
 		//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
 		GenericObject* currentObj = NULL;
 		currentObj = FreeList_;
-		char* NewObject = NewPage + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; // point after page's Next
+		char* NewObject = NewPage + sizeof(void*) + config_.PadBytes_ 
+							+ config_.HBlockInfo_.size_ + config_.LeftAlignSize_; // point after page's Next
 		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 		memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
 		memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_-config_.LeftAlignSize_, ALIGN_PATTERN, config_.LeftAlignSize_);
 		FreeList_ = reinterpret_cast<GenericObject*>(NewObject);
 		FreeList_->Next = NULL;
 		currentObj = NULL;
@@ -525,11 +587,12 @@ char* ObjectAllocator::CreateAPage(){
 		while(countBlocks){
 			currentObj = FreeList_;
 			NewObject = reinterpret_cast<char* >(FreeList_); 
-			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
+			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_ + config_.InterAlignSize_;
 			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 			memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 			memset(NewObject , UNALLOCATED_PATTERN, stats_.ObjectSize_ );
 			memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
+			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_-config_.InterAlignSize_, ALIGN_PATTERN, config_.InterAlignSize_);
 			FreeList_ = reinterpret_cast<GenericObject* >(NewObject);
 			FreeList_->Next = currentObj;
 			currentObj = NULL;
@@ -609,26 +672,37 @@ ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) co
 }
 
 /**
- * @fn bool ObjectAllocator::isObjectFreedAlready(void* ptrToBlock) const
+ * @fn bool ObjectAllocator::isPageEmpty(void* ptrToPage) const
  * @brief 
- * 		helper function that checks if object's for Freed pattern
- * @param ptrToBlock 
- * 		pointer to object to be checked with
+ * 		helper function used for checking if page is empty
+ * @param ptrToPage 
+ * 		input parameter, the pointer to page to be checked
  * @return true 
- * 		if object contains freed pattern, it was freed before
+ * 		true if page is empty
  * @return false 
- * 		if object doesnt contain freed parttern
+ * 		false if page is currently in use
  */
-bool ObjectAllocator::isObjectFreedAlready(void* ptrToBlock) const{
-	//check object for freed pattern
-	char* ptrToData = reinterpret_cast<char*>(ptrToBlock) + sizeof(void*);
+bool ObjectAllocator::isPageEmpty(void* ptrToPage) const{
 	
-	size_t count = stats_.ObjectSize_ - sizeof(void*);
+	char* ptrToFirstBlock = reinterpret_cast<char*>(ptrToPage) + sizeof_LeftmostBlock;
+	size_t count = config_.ObjectsPerPage_;
+	size_t countFreeObjects = 0;
 	while(count){
-		if(static_cast<unsigned char>(*ptrToData)!=FREED_PATTERN)
-			return true; // Object was already FREED
+		//check each object in each if they are empty
+		if(checkObjectForPattern(ptrToFirstBlock, FREED_PATTERN)){ //check for other patterns
+			countFreeObjects++;
+		}
+		else if(checkObjectForPattern(ptrToFirstBlock, UNALLOCATED_PATTERN)){ //check for other patterns
+			countFreeObjects++;
+		}
+		//when all blocks are empty, then page is empty
+		if(countFreeObjects == config_.ObjectsPerPage_){
+			return true;
+		}
+			
+
+		ptrToFirstBlock = ptrToFirstBlock + sizeof_InnerBlock; //go to next block
 		count--;
 	}
-	return false; //Object havent been FREED
+	return false;
 }
-
