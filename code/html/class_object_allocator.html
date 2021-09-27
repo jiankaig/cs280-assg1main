@@ -85,7 +85,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad74ae60db01f355cd08e13909a237df5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the callback fn for each block that is potentially corrupted.  <a href="class_object_allocator.html#ad74ae60db01f355cd08e13909a237df5">More...</a><br /></td></tr>
 <tr class="separator:ad74ae60db01f355cd08e13909a237df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11450c43de55e71244889c930dd6a985"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a11450c43de55e71244889c930dd6a985">FreeEmptyPages</a> ()</td></tr>
-<tr class="memdesc:a11450c43de55e71244889c930dd6a985"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function frees and deallocate all empty pages This function is not implemented to match extra credit test cases.  <a href="class_object_allocator.html#a11450c43de55e71244889c930dd6a985">More...</a><br /></td></tr>
+<tr class="memdesc:a11450c43de55e71244889c930dd6a985"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function frees and deallocate all empty pages.  <a href="class_object_allocator.html#a11450c43de55e71244889c930dd6a985">More...</a><br /></td></tr>
 <tr class="separator:a11450c43de55e71244889c930dd6a985"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d921f5d6ae2a300feb18c7efa874ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a0d921f5d6ae2a300feb18c7efa874ad3">SetDebugState</a> (bool State)</td></tr>
 <tr class="memdesc:a0d921f5d6ae2a300feb18c7efa874ad3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns the freelist pointer from the OA.  <a href="class_object_allocator.html#a0d921f5d6ae2a300feb18c7efa874ad3">More...</a><br /></td></tr>
@@ -149,9 +149,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a0aaf6bbfaf00133fc1c40f30df3f3fec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_object_allocator.html#ae6e20b7089383dd3da1c219b77d9ad10">ObjectAllocator::PaddState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec">isPadCorrupted</a> (void *ptrToBlock) const</td></tr>
 <tr class="memdesc:a0aaf6bbfaf00133fc1c40f30df3f3fec"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function to check if block's pad are corrupted  <a href="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec">More...</a><br /></td></tr>
 <tr class="separator:a0aaf6bbfaf00133fc1c40f30df3f3fec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bec33d3dea6867615654cbeceb5aa64"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a8bec33d3dea6867615654cbeceb5aa64">isObjectFreedAlready</a> (void *ptrToBlock) const</td></tr>
-<tr class="memdesc:a8bec33d3dea6867615654cbeceb5aa64"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function that checks if object's for Freed pattern  <a href="class_object_allocator.html#a8bec33d3dea6867615654cbeceb5aa64">More...</a><br /></td></tr>
-<tr class="separator:a8bec33d3dea6867615654cbeceb5aa64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae321448872aaeb3d30bec05634c9dfb3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#ae321448872aaeb3d30bec05634c9dfb3">checkObjectForPattern</a> (void *ptrToBlock, const unsigned char pattern) const</td></tr>
+<tr class="memdesc:ae321448872aaeb3d30bec05634c9dfb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function that checks if object's for memory signatures  <a href="class_object_allocator.html#ae321448872aaeb3d30bec05634c9dfb3">More...</a><br /></td></tr>
+<tr class="separator:ae321448872aaeb3d30bec05634c9dfb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59dc67b629e19065bb356720d7aa095a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a59dc67b629e19065bb356720d7aa095a">isPageEmpty</a> (void *ptrToPage) const</td></tr>
+<tr class="memdesc:a59dc67b629e19065bb356720d7aa095a"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function used for checking if page is empty  <a href="class_object_allocator.html#a59dc67b629e19065bb356720d7aa095a">More...</a><br /></td></tr>
+<tr class="separator:a59dc67b629e19065bb356720d7aa095a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -177,6 +180,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:aeaa8d8c2b09b914a06e1c16732c1b31e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82857667810b815c2ef23246b7bb66c5"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a82857667810b815c2ef23246b7bb66c5">upperBoundary</a></td></tr>
 <tr class="separator:a82857667810b815c2ef23246b7bb66c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09f1e3b2f5e4366ce1f7ae62e361e1e8"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a09f1e3b2f5e4366ce1f7ae62e361e1e8">sizeof_LeftmostBlock</a></td></tr>
+<tr class="separator:a09f1e3b2f5e4366ce1f7ae62e361e1e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2e6ed64555ace2f470356fa7a4adf1c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#ac2e6ed64555ace2f470356fa7a4adf1c">sizeof_InnerBlock</a></td></tr>
+<tr class="separator:ac2e6ed64555ace2f470356fa7a4adf1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5188547524ccad534b545788d7603afa"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="class_object_allocator.html#ae6e20b7089383dd3da1c219b77d9ad10">ObjectAllocator::PaddState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_object_allocator.html#a5188547524ccad534b545788d7603afa">padState_</a></td></tr>
 <tr class="separator:a5188547524ccad534b545788d7603afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -189,7 +196,7 @@ Static Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This class represents a custom memory manager </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00255">255</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00256">256</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ada06077ea9421541d6a645a1b4b8ab91" name="ada06077ea9421541d6a645a1b4b8ab91"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada06077ea9421541d6a645a1b4b8ab91">&#9670;&nbsp;</a></span>DUMPCALLBACK</h2>
@@ -205,7 +212,7 @@ Static Private Attributes</h2></td></tr>
 
 <p>Callback function when dumping memory leaks. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00259">259</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00260">260</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
 </div>
 </div>
@@ -223,7 +230,7 @@ Static Private Attributes</h2></td></tr>
 
 <p>Callback function when validating blocks. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00260">260</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00261">261</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +260,7 @@ Static Private Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="ae6e20b7089383dd3da1c219b77d9ad10a52e383924dadaa3d966f0890df42d1b8" name="ae6e20b7089383dd3da1c219b77d9ad10a52e383924dadaa3d966f0890df42d1b8"></a>CORRUPT_RIGHT&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00321">321</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00324">324</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
 </div>
 </div>
@@ -294,9 +301,9 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00057">57</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00059">59</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00314">AllocNum</a>, <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, <a class="el" href="_object_allocator_8h_source.html#l00067">OAException::E_BAD_BOUNDARY</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00209">OAConfig::InterAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00208">OAConfig::LeftAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00317">lowerBoundary</a>, <a class="el" href="_object_allocator_8h_source.html#l00312">OAException_</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00202">OAConfig::ObjectsPerPage_</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00225">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>, <a class="el" href="_object_allocator_8h_source.html#l00318">upperBoundary</a>, and <a class="el" href="_object_allocator_8h_source.html#l00201">OAConfig::UseCPPMemManager_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00315">AllocNum</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00522">ComputeAlign_()</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, <a class="el" href="_object_allocator_8h_source.html#l00068">OAException::E_BAD_BOUNDARY</a>, <a class="el" href="_object_allocator_8h_source.html#l00308">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00210">OAConfig::InterAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00209">OAConfig::LeftAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00318">lowerBoundary</a>, <a class="el" href="_object_allocator_8h_source.html#l00313">OAException_</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00203">OAConfig::ObjectsPerPage_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">sizeof_InnerBlock</a>, <a class="el" href="_object_allocator_8h_source.html#l00320">sizeof_LeftmostBlock</a>, <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>, <a class="el" href="_object_allocator_8h_source.html#l00319">upperBoundary</a>, and <a class="el" href="_object_allocator_8h_source.html#l00202">OAConfig::UseCPPMemManager_</a>.</p>
 
 </div>
 </div>
@@ -317,9 +324,9 @@ Static Private Attributes</h2></td></tr>
 
 <p>Destroy the Object Allocator:: Object Allocator object. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00087">87</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00092">92</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00201">OAConfig::UseCPPMemManager_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00202">OAConfig::UseCPPMemManager_</a>.</p>
 
 </div>
 </div>
@@ -377,9 +384,63 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void* returns reference to allocated page. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00111">111</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00116">116</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::additional_</a>, <a class="el" href="_object_allocator_8h_source.html#l00249">MemBlockInfo::alloc_num</a>, <a class="el" href="_object_allocator_8h_source.html#l00264">ALLOCATED_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00230">OAStats::Allocations_</a>, <a class="el" href="_object_allocator_8h_source.html#l00314">AllocNum</a>, <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, <a class="el" href="_object_allocator_8h_source.html#l00065">OAException::E_NO_MEMORY</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbBasic</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbExtended</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbExternal</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00247">MemBlockInfo::in_use</a>, <a class="el" href="_object_allocator_8h_source.html#l00248">MemBlockInfo::label</a>, <a class="el" href="_object_allocator_8h_source.html#l00317">lowerBoundary</a>, <a class="el" href="_object_allocator_8h_source.html#l00203">OAConfig::MaxPages_</a>, <a class="el" href="_object_allocator_8h_source.html#l00229">OAStats::MostObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00316">NewObject</a>, <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00227">OAStats::ObjectsInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00228">OAStats::PagesInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00225">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>, <a class="el" href="_object_allocator_8h_source.html#l00132">OAConfig::HeaderBlockInfo::type_</a>, <a class="el" href="_object_allocator_8h_source.html#l00318">upperBoundary</a>, and <a class="el" href="_object_allocator_8h_source.html#l00201">OAConfig::UseCPPMemManager_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00135">OAConfig::HeaderBlockInfo::additional_</a>, <a class="el" href="_object_allocator_8h_source.html#l00250">MemBlockInfo::alloc_num</a>, <a class="el" href="_object_allocator_8h_source.html#l00265">ALLOCATED_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00231">OAStats::Allocations_</a>, <a class="el" href="_object_allocator_8h_source.html#l00315">AllocNum</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, <a class="el" href="_object_allocator_8h_source.html#l00066">OAException::E_NO_MEMORY</a>, <a class="el" href="_object_allocator_8h_source.html#l00308">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00227">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbBasic</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbExtended</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbExternal</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00248">MemBlockInfo::in_use</a>, <a class="el" href="_object_allocator_8h_source.html#l00249">MemBlockInfo::label</a>, <a class="el" href="_object_allocator_8h_source.html#l00318">lowerBoundary</a>, <a class="el" href="_object_allocator_8h_source.html#l00204">OAConfig::MaxPages_</a>, <a class="el" href="_object_allocator_8h_source.html#l00230">OAStats::MostObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00317">NewObject</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00228">OAStats::ObjectsInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00229">OAStats::PagesInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::type_</a>, <a class="el" href="_object_allocator_8h_source.html#l00319">upperBoundary</a>, and <a class="el" href="_object_allocator_8h_source.html#l00202">OAConfig::UseCPPMemManager_</a>.</p>
+
+</div>
+</div>
+<a id="ae321448872aaeb3d30bec05634c9dfb3" name="ae321448872aaeb3d30bec05634c9dfb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae321448872aaeb3d30bec05634c9dfb3">&#9670;&nbsp;</a></span>checkObjectForPattern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ObjectAllocator::checkObjectForPattern </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ptrToBlock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned char&#160;</td>
+          <td class="paramname"><em>pattern</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>helper function that checks if object's for memory signatures </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptrToBlock</td><td>pointer to object to be checked with </td></tr>
+    <tr><td class="paramname">pattern</td><td>memory signature to be checked for </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if object contains pattern at every byte in data </dd>
+<dd>
+false if object doesnt contain parttern </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00499">499</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>.</p>
 
 </div>
 </div>
@@ -408,9 +469,11 @@ Static Private Attributes</h2></td></tr>
 
 <p>This helper function helps to compute the alignment of the memory block. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00462">462</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00522">522</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::Alignment_</a>, <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00209">OAConfig::InterAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00208">OAConfig::LeftAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00208">OAConfig::Alignment_</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00210">OAConfig::InterAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00209">OAConfig::LeftAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -440,11 +503,11 @@ Static Private Attributes</h2></td></tr>
 <p>helper function for creating a page based on configuration found in <a class="el" href="struct_o_a_config.html">OAConfig</a> </p>
 <dl class="section return"><dt>Returns</dt><dd>char* returns pointer to Page Allocated </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00497">497</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00557">557</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00065">OAException::E_NO_MEMORY</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00316">NewObject</a>, <a class="el" href="_object_allocator_8h_source.html#l00315">NewPage</a>, <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00202">OAConfig::ObjectsPerPage_</a>, <a class="el" href="_object_allocator_8h_source.html#l00266">PAD_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00228">OAStats::PagesInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00225">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00263">UNALLOCATED_PATTERN</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00268">ALIGN_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00066">OAException::E_NO_MEMORY</a>, <a class="el" href="_object_allocator_8h_source.html#l00308">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00227">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00210">OAConfig::InterAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00209">OAConfig::LeftAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00317">NewObject</a>, <a class="el" href="_object_allocator_8h_source.html#l00316">NewPage</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00203">OAConfig::ObjectsPerPage_</a>, <a class="el" href="_object_allocator_8h_source.html#l00267">PAD_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00229">OAStats::PagesInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00264">UNALLOCATED_PATTERN</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -474,9 +537,9 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>unsigned Return the number of objects in use </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00301">301</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00304">304</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::additional_</a>, <a class="el" href="_object_allocator_8h_source.html#l00119">OAConfig::BASIC_HEADER_SIZE</a>, <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00051">DEFAULT_OBJECTS_PER_PAGE</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbBasic</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbExtended</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbExternal</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00132">OAConfig::HeaderBlockInfo::type_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00135">OAConfig::HeaderBlockInfo::additional_</a>, <a class="el" href="_object_allocator_8h_source.html#l00120">OAConfig::BASIC_HEADER_SIZE</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00052">DEFAULT_OBJECTS_PER_PAGE</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbBasic</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbExtended</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbExternal</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8h_source.html#l00209">OAConfig::LeftAlignSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::type_</a>.</p>
 
 </div>
 </div>
@@ -524,11 +587,11 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int returns 1 if successful page found, return -1 if page not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00559">559</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00622">622</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00225">OAStats::PageSize_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::PageSize_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>.</p>
 
 </div>
 </div>
@@ -556,9 +619,9 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00207">207</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00211">211</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::additional_</a>, <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">CORRUPT_LEFT</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">CORRUPT_RIGHT</a>, <a class="el" href="_object_allocator_8h_source.html#l00231">OAStats::Deallocations_</a>, <a class="el" href="_object_allocator_8h_source.html#l00067">OAException::E_BAD_BOUNDARY</a>, <a class="el" href="_object_allocator_8h_source.html#l00069">OAException::E_CORRUPTED_BLOCK</a>, <a class="el" href="_object_allocator_8h_source.html#l00068">OAException::E_MULTIPLE_FREE</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00559">FindPageByObject()</a>, <a class="el" href="_object_allocator_8h_source.html#l00265">FREED_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00125">OAConfig::hbExtended</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00622">isObjectFreedAlready()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00589">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00227">OAStats::ObjectsInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00225">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>, <a class="el" href="_object_allocator_8h_source.html#l00132">OAConfig::HeaderBlockInfo::type_</a>, <a class="el" href="_object_allocator_8h_source.html#l00318">upperBoundary</a>, <a class="el" href="_object_allocator_8h_source.html#l00201">OAConfig::UseCPPMemManager_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00320">ZERO_PATTERN</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00135">OAConfig::HeaderBlockInfo::additional_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00499">checkObjectForPattern()</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">CORRUPT_LEFT</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">CORRUPT_RIGHT</a>, <a class="el" href="_object_allocator_8h_source.html#l00232">OAStats::Deallocations_</a>, <a class="el" href="_object_allocator_8h_source.html#l00068">OAException::E_BAD_BOUNDARY</a>, <a class="el" href="_object_allocator_8h_source.html#l00070">OAException::E_CORRUPTED_BLOCK</a>, <a class="el" href="_object_allocator_8h_source.html#l00069">OAException::E_MULTIPLE_FREE</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00622">FindPageByObject()</a>, <a class="el" href="_object_allocator_8h_source.html#l00266">FREED_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00308">FreeList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00227">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8h_source.html#l00126">OAConfig::hbExtended</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00652">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00228">OAStats::ObjectsInUse_</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00226">OAStats::PageSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">sizeof_InnerBlock</a>, <a class="el" href="_object_allocator_8h_source.html#l00320">sizeof_LeftmostBlock</a>, <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::type_</a>, <a class="el" href="_object_allocator_8h_source.html#l00319">upperBoundary</a>, <a class="el" href="_object_allocator_8h_source.html#l00202">OAConfig::UseCPPMemManager_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00323">ZERO_PATTERN</a>.</p>
 
 </div>
 </div>
@@ -577,10 +640,12 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This function frees and deallocate all empty pages This function is not implemented to match extra credit test cases. </p>
+<p>This function frees and deallocate all empty pages. </p>
 <dl class="section return"><dt>Returns</dt><dd>unsigned Return number of free pages </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00395">395</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00396">396</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00227">OAStats::FreeObjects_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00203">OAConfig::ObjectsPerPage_</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00229">OAStats::PagesInUse_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
 
 </div>
 </div>
@@ -602,9 +667,9 @@ Static Private Attributes</h2></td></tr>
 <p>returns the configuration parameters </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_o_a_config.html">OAConfig</a> contains configuration properties of memory manager </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00442">442</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00471">471</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>.</p>
 
 </div>
 </div>
@@ -626,9 +691,9 @@ Static Private Attributes</h2></td></tr>
 <p>returns a pointer to the internal free list </p>
 <dl class="section return"><dt>Returns</dt><dd>const void* </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00419">419</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00448">448</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00307">FreeList_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00308">FreeList_</a>.</p>
 
 </div>
 </div>
@@ -650,9 +715,9 @@ Static Private Attributes</h2></td></tr>
 <p>returns a pointer to the internal page list </p>
 <dl class="section return"><dt>Returns</dt><dd>const void* </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00430">430</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00459">459</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>.</p>
 
 </div>
 </div>
@@ -674,52 +739,9 @@ Static Private Attributes</h2></td></tr>
 <p>returns the statistics for the allocator </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_o_a_stats.html">OAStats</a> contains statics info of Objet allocator </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00453">453</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00482">482</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>.</p>
-
-</div>
-</div>
-<a id="a8bec33d3dea6867615654cbeceb5aa64" name="a8bec33d3dea6867615654cbeceb5aa64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bec33d3dea6867615654cbeceb5aa64">&#9670;&nbsp;</a></span>isObjectFreedAlready()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ObjectAllocator::isObjectFreedAlready </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>ptrToBlock</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>helper function that checks if object's for Freed pattern </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptrToBlock</td><td>pointer to object to be checked with </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if object contains freed pattern, it was freed before </dd>
-<dd>
-false if object doesnt contain freed parttern </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00622">622</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00265">FREED_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
 
 </div>
 </div>
@@ -756,11 +778,54 @@ false if object doesnt contain freed parttern </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_object_allocator.html#ae6e20b7089383dd3da1c219b77d9ad10">ObjectAllocator::PaddState</a> returns enum CORRUPT_LEFT or CORRUPT_RIGHT or NO_CORRUPT </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00589">589</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00652">652</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">CORRUPT_LEFT</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">CORRUPT_RIGHT</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">NO_CORRUPT</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00266">PAD_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">CORRUPT_LEFT</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">CORRUPT_RIGHT</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">NO_CORRUPT</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00267">PAD_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00362">ValidatePages()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00365">ValidatePages()</a>.</p>
+
+</div>
+</div>
+<a id="a59dc67b629e19065bb356720d7aa095a" name="a59dc67b629e19065bb356720d7aa095a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59dc67b629e19065bb356720d7aa095a">&#9670;&nbsp;</a></span>isPageEmpty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ObjectAllocator::isPageEmpty </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ptrToPage</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>helper function used for checking if page is empty </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptrToPage</td><td>input parameter, the pointer to page to be checked </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true true if page is empty </dd>
+<dd>
+false false if page is currently in use </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00685">685</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="_object_allocator_8cpp_source.html#l00499">checkObjectForPattern()</a>, <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00266">FREED_PATTERN</a>, <a class="el" href="_object_allocator_8h_source.html#l00203">OAConfig::ObjectsPerPage_</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">sizeof_InnerBlock</a>, <a class="el" href="_object_allocator_8h_source.html#l00320">sizeof_LeftmostBlock</a>, and <a class="el" href="_object_allocator_8h_source.html#l00264">UNALLOCATED_PATTERN</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00396">FreeEmptyPages()</a>.</p>
 
 </div>
 </div>
@@ -816,9 +881,9 @@ false if object doesnt contain freed parttern </dd></dl>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00408">408</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00437">437</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00204">OAConfig::DebugOn_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::DebugOn_</a>.</p>
 
 </div>
 </div>
@@ -847,9 +912,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>unsigned return the number of corrupted memory region. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00362">362</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8cpp_source.html#l00365">365</a> of file <a class="el" href="_object_allocator_8cpp_source.html">ObjectAllocator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00310">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">CORRUPT_LEFT</a>, <a class="el" href="_object_allocator_8h_source.html#l00321">CORRUPT_RIGHT</a>, <a class="el" href="_object_allocator_8h_source.html#l00051">DEFAULT_OBJECTS_PER_PAGE</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00589">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8h_source.html#l00239">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00222">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00205">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00306">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00133">OAConfig::HeaderBlockInfo::size_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00311">stats_</a>.</p>
+<p class="reference">References <a class="el" href="_object_allocator_8h_source.html#l00311">config_</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">CORRUPT_LEFT</a>, <a class="el" href="_object_allocator_8h_source.html#l00324">CORRUPT_RIGHT</a>, <a class="el" href="_object_allocator_8h_source.html#l00052">DEFAULT_OBJECTS_PER_PAGE</a>, <a class="el" href="_object_allocator_8h_source.html#l00207">OAConfig::HBlockInfo_</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00652">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8h_source.html#l00240">GenericObject::Next</a>, <a class="el" href="_object_allocator_8h_source.html#l00223">OAStats::ObjectSize_</a>, <a class="el" href="_object_allocator_8h_source.html#l00206">OAConfig::PadBytes_</a>, <a class="el" href="_object_allocator_8h_source.html#l00307">PageList_</a>, <a class="el" href="_object_allocator_8h_source.html#l00134">OAConfig::HeaderBlockInfo::size_</a>, and <a class="el" href="_object_allocator_8h_source.html#l00312">stats_</a>.</p>
 
 </div>
 </div>
@@ -876,7 +941,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>For the alignment bytes. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00267">267</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00268">268</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>.</p>
 
 </div>
 </div>
@@ -902,9 +969,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>Memory owned by the client. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00264">264</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00265">265</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>.</p>
 
 </div>
 </div>
@@ -928,9 +995,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00314">314</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00315">315</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -954,9 +1021,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00310">310</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00311">311</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00462">ComputeAlign_()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00301">DumpMemoryInUse()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00442">GetConfig()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00589">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00408">SetDebugState()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00362">ValidatePages()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00087">~ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00522">ComputeAlign_()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00304">DumpMemoryInUse()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00396">FreeEmptyPages()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00471">GetConfig()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00652">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00437">SetDebugState()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00365">ValidatePages()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00092">~ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -982,9 +1049,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>Memory returned by the client. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00265">265</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00266">266</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00622">isObjectFreedAlready()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>.</p>
 
 </div>
 </div>
@@ -1010,9 +1077,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>the beginning of the list of objects </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00307">307</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00308">308</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00419">GetFreeList()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00448">GetFreeList()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -1036,9 +1103,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00317">317</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00318">318</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -1062,9 +1129,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00316">316</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00317">317</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>.</p>
 
 </div>
 </div>
@@ -1088,9 +1155,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00315">315</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00316">316</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>.</p>
 
 </div>
 </div>
@@ -1114,9 +1181,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00312">312</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00313">313</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -1142,9 +1209,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>Pad signature to detect buffer over/under flow. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00266">266</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00267">267</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00589">isPadCorrupted()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00652">isPadCorrupted()</a>.</p>
 
 </div>
 </div>
@@ -1192,9 +1259,61 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>the beginning of the list of pages </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00306">306</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00307">307</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00301">DumpMemoryInUse()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00430">GetPageList()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00362">ValidatePages()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00087">~ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00304">DumpMemoryInUse()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00396">FreeEmptyPages()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00459">GetPageList()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00365">ValidatePages()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00092">~ObjectAllocator()</a>.</p>
+
+</div>
+</div>
+<a id="ac2e6ed64555ace2f470356fa7a4adf1c" name="ac2e6ed64555ace2f470356fa7a4adf1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2e6ed64555ace2f470356fa7a4adf1c">&#9670;&nbsp;</a></span>sizeof_InnerBlock</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t ObjectAllocator::sizeof_InnerBlock</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00321">321</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
+
+</div>
+</div>
+<a id="a09f1e3b2f5e4366ce1f7ae62e361e1e8" name="a09f1e3b2f5e4366ce1f7ae62e361e1e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09f1e3b2f5e4366ce1f7ae62e361e1e8">&#9670;&nbsp;</a></span>sizeof_LeftmostBlock</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t ObjectAllocator::sizeof_LeftmostBlock</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00320">320</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -1218,9 +1337,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00311">311</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00312">312</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00462">ComputeAlign_()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00301">DumpMemoryInUse()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00559">FindPageByObject()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00453">GetStats()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00622">isObjectFreedAlready()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00589">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00362">ValidatePages()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00499">checkObjectForPattern()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00522">ComputeAlign_()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00304">DumpMemoryInUse()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00622">FindPageByObject()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00396">FreeEmptyPages()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00482">GetStats()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00652">isPadCorrupted()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00365">ValidatePages()</a>.</p>
 
 </div>
 </div>
@@ -1246,9 +1365,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>New memory never given to the client. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00263">263</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00264">264</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00497">CreateAPage()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00557">CreateAPage()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00685">isPageEmpty()</a>.</p>
 
 </div>
 </div>
@@ -1272,9 +1391,9 @@ false if object doesnt contain freed parttern </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00318">318</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00319">319</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00111">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00057">ObjectAllocator()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00116">Allocate()</a>, <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>, and <a class="el" href="_object_allocator_8cpp_source.html#l00059">ObjectAllocator()</a>.</p>
 
 </div>
 </div>
@@ -1300,9 +1419,9 @@ false if object doesnt contain freed parttern </dd></dl>
 
 <p>For the FREED Basic block. </p>
 
-<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00320">320</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_object_allocator_8h_source.html#l00323">323</a> of file <a class="el" href="_object_allocator_8h_source.html">ObjectAllocator.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00207">Free()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_object_allocator_8cpp_source.html#l00211">Free()</a>.</p>
 
 </div>
 </div>

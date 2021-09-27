@@ -90,6 +90,7 @@
       <LI><OBJECT type="text/sitemap"><param name="Name" value="~ObjectAllocator"><param name="Local" value="class_object_allocator.html#a54f72cc0c3da36db8d59ca4ab54e6ecc"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="ObjectAllocator"><param name="Local" value="class_object_allocator.html#aa33d04d26e045e4ac6eff07fa78b25fd"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="Allocate"><param name="Local" value="class_object_allocator.html#a9b102fa9a71e7db59f0915f693133622"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="checkObjectForPattern"><param name="Local" value="class_object_allocator.html#ae321448872aaeb3d30bec05634c9dfb3"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="ComputeAlign_"><param name="Local" value="class_object_allocator.html#ad79e43a05fde05c6dddfa4a96ff471e1"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="CreateAPage"><param name="Local" value="class_object_allocator.html#a4b3bcf524c75e9bdcd2045d3e49f39ff"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="DumpMemoryInUse"><param name="Local" value="class_object_allocator.html#ae454b5a4240ee390ad5140016db835df"><param name="ImageNumber" value="11"></OBJECT>
@@ -100,8 +101,8 @@
       <LI><OBJECT type="text/sitemap"><param name="Name" value="GetFreeList"><param name="Local" value="class_object_allocator.html#ae820ca0c75551adea160e9634f2ef459"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="GetPageList"><param name="Local" value="class_object_allocator.html#ade8a943b51bc8d4f0c79ffb964d8baa2"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="GetStats"><param name="Local" value="class_object_allocator.html#a81de3346d1af09cc74ba0852170608a3"><param name="ImageNumber" value="11"></OBJECT>
-      <LI><OBJECT type="text/sitemap"><param name="Name" value="isObjectFreedAlready"><param name="Local" value="class_object_allocator.html#a8bec33d3dea6867615654cbeceb5aa64"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="isPadCorrupted"><param name="Local" value="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="isPageEmpty"><param name="Local" value="class_object_allocator.html#a59dc67b629e19065bb356720d7aa095a"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="operator="><param name="Local" value="class_object_allocator.html#a04da7cd5ee3c8b57bfc6e3c64263da8a"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="SetDebugState"><param name="Local" value="class_object_allocator.html#a0d921f5d6ae2a300feb18c7efa874ad3"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="ValidatePages"><param name="Local" value="class_object_allocator.html#ad74ae60db01f355cd08e13909a237df5"><param name="ImageNumber" value="11"></OBJECT>
@@ -118,6 +119,8 @@
       <LI><OBJECT type="text/sitemap"><param name="Name" value="PAD_PATTERN"><param name="Local" value="class_object_allocator.html#a81447b175985013c4339c42f6adc42aa"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="padState_"><param name="Local" value="class_object_allocator.html#a5188547524ccad534b545788d7603afa"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="PageList_"><param name="Local" value="class_object_allocator.html#a04c70686ee2ea9a9e2eab7809779b33a"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="sizeof_InnerBlock"><param name="Local" value="class_object_allocator.html#ac2e6ed64555ace2f470356fa7a4adf1c"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="sizeof_LeftmostBlock"><param name="Local" value="class_object_allocator.html#a09f1e3b2f5e4366ce1f7ae62e361e1e8"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="stats_"><param name="Local" value="class_object_allocator.html#a364610f505c2c7ebc3079242fb65e0fb"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="UNALLOCATED_PATTERN"><param name="Local" value="class_object_allocator.html#a41c6ff61d0f553ddb7ee1942ff02752b"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="upperBoundary"><param name="Local" value="class_object_allocator.html#a82857667810b815c2ef23246b7bb66c5"><param name="ImageNumber" value="11"></OBJECT>
@@ -230,6 +233,7 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="~ObjectAllocator"><param name="Local" value="class_object_allocator.html#a54f72cc0c3da36db8d59ca4ab54e6ecc"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="ObjectAllocator"><param name="Local" value="class_object_allocator.html#aa33d04d26e045e4ac6eff07fa78b25fd"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="Allocate"><param name="Local" value="class_object_allocator.html#a9b102fa9a71e7db59f0915f693133622"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="checkObjectForPattern"><param name="Local" value="class_object_allocator.html#ae321448872aaeb3d30bec05634c9dfb3"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="ComputeAlign_"><param name="Local" value="class_object_allocator.html#ad79e43a05fde05c6dddfa4a96ff471e1"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="CreateAPage"><param name="Local" value="class_object_allocator.html#a4b3bcf524c75e9bdcd2045d3e49f39ff"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="DumpMemoryInUse"><param name="Local" value="class_object_allocator.html#ae454b5a4240ee390ad5140016db835df"><param name="ImageNumber" value="11"></OBJECT>
@@ -240,8 +244,8 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="GetFreeList"><param name="Local" value="class_object_allocator.html#ae820ca0c75551adea160e9634f2ef459"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="GetPageList"><param name="Local" value="class_object_allocator.html#ade8a943b51bc8d4f0c79ffb964d8baa2"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="GetStats"><param name="Local" value="class_object_allocator.html#a81de3346d1af09cc74ba0852170608a3"><param name="ImageNumber" value="11"></OBJECT>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="isObjectFreedAlready"><param name="Local" value="class_object_allocator.html#a8bec33d3dea6867615654cbeceb5aa64"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="isPadCorrupted"><param name="Local" value="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="isPageEmpty"><param name="Local" value="class_object_allocator.html#a59dc67b629e19065bb356720d7aa095a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="operator="><param name="Local" value="class_object_allocator.html#a04da7cd5ee3c8b57bfc6e3c64263da8a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="SetDebugState"><param name="Local" value="class_object_allocator.html#a0d921f5d6ae2a300feb18c7efa874ad3"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="ValidatePages"><param name="Local" value="class_object_allocator.html#ad74ae60db01f355cd08e13909a237df5"><param name="ImageNumber" value="11"></OBJECT>
@@ -258,6 +262,8 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="PAD_PATTERN"><param name="Local" value="class_object_allocator.html#a81447b175985013c4339c42f6adc42aa"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="padState_"><param name="Local" value="class_object_allocator.html#a5188547524ccad534b545788d7603afa"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="PageList_"><param name="Local" value="class_object_allocator.html#a04c70686ee2ea9a9e2eab7809779b33a"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="sizeof_InnerBlock"><param name="Local" value="class_object_allocator.html#ac2e6ed64555ace2f470356fa7a4adf1c"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="sizeof_LeftmostBlock"><param name="Local" value="class_object_allocator.html#a09f1e3b2f5e4366ce1f7ae62e361e1e8"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="stats_"><param name="Local" value="class_object_allocator.html#a364610f505c2c7ebc3079242fb65e0fb"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="UNALLOCATED_PATTERN"><param name="Local" value="class_object_allocator.html#a41c6ff61d0f553ddb7ee1942ff02752b"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="upperBoundary"><param name="Local" value="class_object_allocator.html#a82857667810b815c2ef23246b7bb66c5"><param name="ImageNumber" value="11"></OBJECT>

@@ -369,15 +369,19 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ae321448872aaeb3d30bec05634c9dfb3"><param name="Name" value="checkObjectForPattern"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
+  <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a3553fad9fe3934b10ec409b0faa51848"><param name="Name" value="config_"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a8bec33d3dea6867615654cbeceb5aa64"><param name="Name" value="isObjectFreedAlready"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec"><param name="Name" value="isPadCorrupted"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec"><param name="Name" value="isPadCorrupted"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a59dc67b629e19065bb356720d7aa095a"><param name="Name" value="isPageEmpty"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
@@ -390,6 +394,14 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a5188547524ccad534b545788d7603afa"><param name="Name" value="padState_"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ac2e6ed64555ace2f470356fa7a4adf1c"><param name="Name" value="sizeof_InnerBlock"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a09f1e3b2f5e4366ce1f7ae62e361e1e8"><param name="Name" value="sizeof_LeftmostBlock"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
@@ -419,6 +431,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a97735564e53333c55a875169cbaa3771"><param name="Name" value="ZERO_PATTERN"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_o_a_config_1_1_header_block_info.html#af99732e7667a763d1eeb454b3f15fb32"><param name="Name" value="additional_"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_mem_block_info.html#abf028a52d7595ad36098b3cc8da0c687"><param name="Name" value="alloc_num"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ae321448872aaeb3d30bec05634c9dfb3"><param name="Name" value="checkObjectForPattern"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_o_a_exception.html#ab005e5c84550ee610fbc08272477c1bb"><param name="Name" value="code"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a3553fad9fe3934b10ec409b0faa51848"><param name="Name" value="config_"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_o_a_exception.html#acfcb4114c8460a0cabbba1badc29851f"><param name="Name" value="error_code_"></OBJECT>
@@ -427,14 +440,16 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_o_a_config.html#a741c6dd161c0174180cc17f9a697b123ab4aa99b887265cf7be1c708598bfd8b1"><param name="Name" value="hbExternal"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_o_a_config.html#a741c6dd161c0174180cc17f9a697b123a6b58774c1737302973412efda306af94"><param name="Name" value="hbNone"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_mem_block_info.html#a6a2898598d9e106c34df94961bb08fc8"><param name="Name" value="in_use"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a8bec33d3dea6867615654cbeceb5aa64"><param name="Name" value="isObjectFreedAlready"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a0aaf6bbfaf00133fc1c40f30df3f3fec"><param name="Name" value="isPadCorrupted"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a59dc67b629e19065bb356720d7aa095a"><param name="Name" value="isPageEmpty"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_mem_block_info.html#ac92dcd55e4d9f19752f883174354f7d4"><param name="Name" value="label"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#aeaa8d8c2b09b914a06e1c16732c1b31e"><param name="Name" value="lowerBoundary"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_o_a_exception.html#a9832626543b944bbef4c4c2c12c2c6ab"><param name="Name" value="message_"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a04da7cd5ee3c8b57bfc6e3c64263da8a"><param name="Name" value="operator="></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a5188547524ccad534b545788d7603afa"><param name="Name" value="padState_"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_o_a_config_1_1_header_block_info.html#ac18553c734c873e7bc1efb0e4c62d3e8"><param name="Name" value="size_"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ac2e6ed64555ace2f470356fa7a4adf1c"><param name="Name" value="sizeof_InnerBlock"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a09f1e3b2f5e4366ce1f7ae62e361e1e8"><param name="Name" value="sizeof_LeftmostBlock"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a364610f505c2c7ebc3079242fb65e0fb"><param name="Name" value="stats_"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_o_a_config_1_1_header_block_info.html#a475b9a930ba8b63c1244ad7308467cfc"><param name="Name" value="type_"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a82857667810b815c2ef23246b7bb66c5"><param name="Name" value="upperBoundary"></OBJECT>

@@ -25,11 +25,12 @@
  *      GetStats
  * 
  *    Private methods include:
+ *      checkObjectForPattern
  *      ComputeAlign_
  *      CreateAPage
  *      FindPageByObject
  *      isPadCorrupted
- *      isObjectFreedAlready
+ *      isPageEmpty
  *    Hours spent on this assignment: 100
  *    Specific portions that gave you the most trouble: optimisation of free.
  * @version 0.1
@@ -316,6 +317,8 @@ class ObjectAllocator
     char* NewObject;
     char* lowerBoundary;
 	  char* upperBoundary;
+    size_t sizeof_LeftmostBlock;
+    size_t sizeof_InnerBlock;
 
     static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
     enum PaddState{ NO_CORRUPT, CORRUPT_LEFT, CORRUPT_RIGHT}padState_;
@@ -325,7 +328,9 @@ class ObjectAllocator
     char* CreateAPage();
     int FindPageByObject(GenericObject* &page, void* Object) const;
     ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
-    bool isObjectFreedAlready(void* ptrToBlock) const;
+    bool checkObjectForPattern(void* ptrToBlock, const unsigned char pattern) const;
+    bool isPageEmpty(void* ptrToPage) const;
+    
 
 };
 
