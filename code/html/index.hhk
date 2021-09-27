@@ -13,7 +13,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="struct_o_a_config.html#a4474c8412a0fc66a4d990dcb6b544299"><param name="Name" value="BASIC_HEADER_SIZE"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ae6e20b7089383dd3da1c219b77d9ad10a944ad510ad7c976ff71acc135ffca120"><param name="Name" value="CORRUPT_LEFT"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ae6e20b7089383dd3da1c219b77d9ad10a52e383924dadaa3d966f0890df42d1b8"><param name="Name" value="CORRUPT_RIGHT"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ad79e43a05fde05c6dddfa4a96ff471e1"><param name="Name" value="ComputeAlign_"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#aa94a73ac3370fe31857430fb42f52184"><param name="Name" value="ComputeAlignment"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#a4b3bcf524c75e9bdcd2045d3e49f39ff"><param name="Name" value="CreateAPage"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_object_allocator_8h.html#a8e7b39fd3ae14d2bc8b3b4ef428f8ac1"><param name="Name" value="DEFAULT_MAX_PAGES"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_object_allocator_8h.html#a77391f90b9bc83af80dc4288a4b02e9d"><param name="Name" value="DEFAULT_OBJECTS_PER_PAGE"></OBJECT>
@@ -265,7 +265,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#ad79e43a05fde05c6dddfa4a96ff471e1"><param name="Name" value="ComputeAlign_"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html#aa94a73ac3370fe31857430fb42f52184"><param name="Name" value="ComputeAlignment"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="class_object_allocator.html"><param name="Name" value="ObjectAllocator"></OBJECT>
   <UL>
