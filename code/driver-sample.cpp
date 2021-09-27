@@ -202,7 +202,7 @@ void PrintArray(T* array, unsigned count)
 }
 
 const unsigned objects = 4096;
-const unsigned pages = 5;//100;
+const unsigned pages = 100;
 const unsigned total = objects * pages;
 void* ptrs[total];
 
@@ -231,6 +231,7 @@ void Stress(bool UseNewDelete)
         Shuffle(ptrs, total);
         for (unsigned i = 0; i < total; i++)
         {
+            //cout<<i<<endl;
             oa->Free(ptrs[i]);
         }
 

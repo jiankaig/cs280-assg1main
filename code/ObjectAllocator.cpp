@@ -27,6 +27,8 @@
  * 		ComputeAlign_
  *      CreateAPage
  *      FindPageByObject
+ *      isPadCorrupted
+ *      isObjectFreedAlready
  *    Hours spent on this assignment: 60
  *    Specific portions that gave you the most trouble: optimisation of free.
  * @version 0.1
@@ -58,6 +60,8 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	AllocNum = 0;
 	FreeList_ = NULL;
 	PageList_ = NULL;
+
+	//ComputeAlign_();
 	
 	stats_.ObjectSize_ = ObjectSize;
 	stats_.PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
@@ -173,8 +177,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 		}
 		
 		//process byte pattern for Object space as "allocated"
-		memset(NewObject, ALLOCATED_PATTERN, stats_.ObjectSize_);
-
+		memset(NewObject , ALLOCATED_PATTERN, stats_.ObjectSize_ );
 		//update acounting info
 		stats_.ObjectsInUse_ += 1;
 		stats_.FreeObjects_ -= 1;
@@ -210,24 +213,8 @@ void ObjectAllocator::Free(void *Object){
 	}
 
 	//check for "double free"
-	bool bNoDoubleFree = true;
-	GenericObject* ptrFreeList = nullptr;
-	ptrFreeList = FreeList_;
-	
-	while(ptrFreeList){
-		if(ptrFreeList == reinterpret_cast<GenericObject* >(Object)){
-			bNoDoubleFree = false; // repeated object freed
-			break;
-		}
-		ptrFreeList = ptrFreeList->Next;
-	}
-	ptrFreeList = nullptr;
-
-	//check for out-of-bounds
-	if(Object < lowerBoundary || Object > upperBoundary)
-	{
-		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. ");
-	}
+	char* ptrToObject = reinterpret_cast<char*>(Object);
+	bool bNoDoubleFree = isObjectFreedAlready(ptrToObject);
 
 	//check if page can be found
 	GenericObject* page = PageList_;
@@ -237,13 +224,19 @@ void ObjectAllocator::Free(void *Object){
 	
 	//check if object is aligned and base case
 	size_t ObjectPosition = (size_t)Object - (size_t)page;
-	// printf("OP:%p = Obj: %p - pg: %p\n",(void*)ObjectPosition, Object, (void*)page);
 	bool isAligned = ((ObjectPosition - 8 - config_.PadBytes_ - config_.HBlockInfo_.size_)  
 					% (stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_))  == 0;
 	bool baseCase = ObjectPosition % stats_.PageSize_ == 0; //special case
 	if(!isAligned || baseCase){
 		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. mis-alignment ");
 	}
+
+	//check for out-of-bounds
+	if(Object < lowerBoundary || Object > upperBoundary)
+	{
+		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. ");
+	}
+
 
 	//check left and right pad bytes for pad pattern
 	if(config_.PadBytes_ != 0){
@@ -535,7 +528,7 @@ char* ObjectAllocator::CreateAPage(){
 			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
 			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 			memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
-			memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
+			memset(NewObject , UNALLOCATED_PATTERN, stats_.ObjectSize_ );
 			memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
 			FreeList_ = reinterpret_cast<GenericObject* >(NewObject);
 			FreeList_->Next = currentObj;
@@ -613,5 +606,29 @@ ObjectAllocator::PaddState  ObjectAllocator::isPadCorrupted(void* ptrToBlock) co
 		
 	}
 	return ObjectAllocator::NO_CORRUPT; // no corruption
+}
+
+/**
+ * @fn bool ObjectAllocator::isObjectFreedAlready(void* ptrToBlock) const
+ * @brief 
+ * 		helper function that checks if object's for Freed pattern
+ * @param ptrToBlock 
+ * 		pointer to object to be checked with
+ * @return true 
+ * 		if object contains freed pattern, it was freed before
+ * @return false 
+ * 		if object doesnt contain freed parttern
+ */
+bool ObjectAllocator::isObjectFreedAlready(void* ptrToBlock) const{
+	//check object for freed pattern
+	char* ptrToData = reinterpret_cast<char*>(ptrToBlock) + sizeof(void*);
+	
+	size_t count = stats_.ObjectSize_ - sizeof(void*);
+	while(count){
+		if(static_cast<unsigned char>(*ptrToData)!=FREED_PATTERN)
+			return true; // Object was already FREED
+		count--;
+	}
+	return false; //Object havent been FREED
 }
 

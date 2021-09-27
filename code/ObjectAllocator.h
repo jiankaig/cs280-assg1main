@@ -28,7 +28,9 @@
  *      ComputeAlign_
  *      CreateAPage
  *      FindPageByObject
- *    Hours spent on this assignment: 60
+ *      isPadCorrupted
+ *      isObjectFreedAlready
+ *    Hours spent on this assignment: 100
  *    Specific portions that gave you the most trouble: optimisation of free.
  * @version 0.1
  * @date 2021-09-26
@@ -323,6 +325,7 @@ class ObjectAllocator
     char* CreateAPage();
     int FindPageByObject(GenericObject* &page, void* Object) const;
     ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
+    bool isObjectFreedAlready(void* ptrToBlock) const;
 
 };
 
