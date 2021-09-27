@@ -24,6 +24,7 @@
  *      GetStats
  * 
  *    Private methods include:
+ * 		ComputeAlign_
  *      CreateAPage
  *      FindPageByObject
  *    Hours spent on this assignment: 60
@@ -61,13 +62,13 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	stats_.ObjectSize_ = ObjectSize;
 	stats_.PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
 		+ config_.PadBytes_ * 2 * config_.ObjectsPerPage_
-		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_);
+		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_)
+		+ config_.LeftAlignSize_ + (config_.ObjectsPerPage_ - 1) * config_.InterAlignSize_;
 	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
 	
 	if(!config_.UseCPPMemManager_){
 		// create if not using standard new/delete
 		lowerBoundary = CreateAPage();
-		//printf("first page start: %p\n", (void*)lowerBoundary);
 		upperBoundary = lowerBoundary + stats_.PageSize_;
 	}
 
@@ -460,8 +461,38 @@ OAStats ObjectAllocator::GetStats() const{
 	return stats_;
 }         
 
-//---------------------------------------------------------------------------
-//Private methods
+/**
+ * @fn void ObjectAllocator::ComputeAlign_()
+ * @brief 
+ * 		This helper function helps to compute the alignment of the memory block.
+ */
+void ObjectAllocator::ComputeAlign_() {
+  // return if there is no alignment
+  if (config_.Alignment_ == 0) return;
+
+  // compute data size for left alignment
+  size_t inSize =
+      sizeof(GenericObject *) + config_.HBlockInfo_.size_ + config_.PadBytes_;
+  size_t mod = (inSize % config_.Alignment_);
+
+  if (mod == 0 || inSize <= config_.Alignment_) return;
+
+  // compute left alignment if inSize is greater and not
+  // multiples of alignment size
+  config_.LeftAlignSize_ = config_.Alignment_ - static_cast<unsigned int>(mod);
+
+  // compute data size for inter alignment
+  inSize = stats_.ObjectSize_ + 2 * config_.PadBytes_ +
+           config_.HBlockInfo_.size_;
+  mod = (inSize % config_.Alignment_);
+
+  if (mod == 0 || inSize <= config_.Alignment_) return;
+
+  // compute inter alignment if inSize is greater and not
+  // multiples of alignment size
+  config_.InterAlignSize_ = config_.Alignment_ - static_cast<unsigned int>(mod);
+}
+
 /**
  * @fn char* ObjectAllocator::CreateAPage()
  * @brief 

@@ -25,6 +25,7 @@
  *      GetStats
  * 
  *    Private methods include:
+ *      ComputeAlign_
  *      CreateAPage
  *      FindPageByObject
  *    Hours spent on this assignment: 60
@@ -316,6 +317,9 @@ class ObjectAllocator
 
     static const unsigned char ZERO_PATTERN =       0x00; //!< For the FREED Basic block
     enum PaddState{ NO_CORRUPT, CORRUPT_LEFT, CORRUPT_RIGHT}padState_;
+
+    //private methods
+    void ObjectAllocator::ComputeAlign_();
     char* CreateAPage();
     int FindPageByObject(GenericObject* &page, void* Object) const;
     ObjectAllocator::PaddState isPadCorrupted(void* ptrToBlock) const;
