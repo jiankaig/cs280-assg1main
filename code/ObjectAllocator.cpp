@@ -61,7 +61,7 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	FreeList_ = NULL;
 	PageList_ = NULL;
 
-	//ComputeAlign_();
+	ComputeAlign_();
 	
 	stats_.ObjectSize_ = ObjectSize;
 	stats_.PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
@@ -224,8 +224,9 @@ void ObjectAllocator::Free(void *Object){
 	
 	//check if object is aligned and base case
 	size_t ObjectPosition = (size_t)Object - (size_t)page;
-	bool isAligned = ((ObjectPosition - 8 - config_.PadBytes_ - config_.HBlockInfo_.size_)  
-					% (stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_))  == 0;
+	size_t sizeof_LeftmostBlock = sizeof(void*) + config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.LeftAlignSize_;
+	size_t sizeof_InnerBlock = stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.InterAlignSize_;
+	bool isAligned = ((ObjectPosition - sizeof_LeftmostBlock) % sizeof_InnerBlock)  == 0;
 	bool baseCase = ObjectPosition % stats_.PageSize_ == 0; //special case
 	if(!isAligned || baseCase){
 		throw OAException(OAException::E_BAD_BOUNDARY, "bad boundary. mis-alignment ");
@@ -304,7 +305,7 @@ unsigned ObjectAllocator::DumpMemoryInUse(DUMPCALLBACK fn) const{
 	while(page){
 		//loop through each block in page
 		// char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; //firstblock
-		char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + OAConfig::BASIC_HEADER_SIZE; //firstblock
+		char* ptrToBlock = reinterpret_cast<char*>(page) + sizeof(size_t) + OAConfig::BASIC_HEADER_SIZE + config_.PadBytes_ + config_.LeftAlignSize_; //firstblock
 		char* ptrToHeaderBlock;
 		bool in_use=false;
 		for(int i=0;i<DEFAULT_OBJECTS_PER_PAGE;i++){
@@ -510,11 +511,13 @@ char* ObjectAllocator::CreateAPage(){
 		//3. Casting the 1st 16-byte block to GenericObject* and putting on free list
 		GenericObject* currentObj = NULL;
 		currentObj = FreeList_;
-		char* NewObject = NewPage + sizeof(size_t) + config_.PadBytes_ + config_.HBlockInfo_.size_; // point after page's Next
+		char* NewObject = NewPage + sizeof(void*) + config_.PadBytes_ 
+							+ config_.HBlockInfo_.size_ + config_.LeftAlignSize_; // point after page's Next
 		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 		memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 		memset(NewObject, UNALLOCATED_PATTERN, stats_.ObjectSize_);
 		memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
+		memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_-config_.LeftAlignSize_, ALIGN_PATTERN, config_.LeftAlignSize_);
 		FreeList_ = reinterpret_cast<GenericObject*>(NewObject);
 		FreeList_->Next = NULL;
 		currentObj = NULL;
@@ -525,11 +528,12 @@ char* ObjectAllocator::CreateAPage(){
 		while(countBlocks){
 			currentObj = FreeList_;
 			NewObject = reinterpret_cast<char* >(FreeList_); 
-			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_;
+			NewObject = NewObject + stats_.ObjectSize_ + config_.PadBytes_*2 + config_.HBlockInfo_.size_ + config_.InterAlignSize_;
 			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_, 0x00, config_.HBlockInfo_.size_);
 			memset(NewObject-config_.PadBytes_, PAD_PATTERN, config_.PadBytes_);
 			memset(NewObject , UNALLOCATED_PATTERN, stats_.ObjectSize_ );
 			memset(NewObject+stats_.ObjectSize_, PAD_PATTERN, config_.PadBytes_);
+			memset(NewObject-config_.PadBytes_-config_.HBlockInfo_.size_-config_.InterAlignSize_, ALIGN_PATTERN, config_.InterAlignSize_);
 			FreeList_ = reinterpret_cast<GenericObject* >(NewObject);
 			FreeList_->Next = currentObj;
 			currentObj = NULL;

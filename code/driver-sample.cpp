@@ -2116,7 +2116,7 @@ int main(int argc, char** argv)
 #endif
 
     int test=0;
-    //std::cin >> test;
+    std::cin >> test;
     if (argc > 1)
         test = std::atoi(argv[1]);
     if (argc > 2)
@@ -2215,7 +2215,7 @@ int main(int argc, char** argv)
         Stress(false);
         cout << endl;
         break;
-#if 0
+#if 1
     case 18:
         cout << "============================== Test alignment..." << endl;
         TestAlignment();
@@ -2289,18 +2289,18 @@ int main(int argc, char** argv)
         cout << "============================== Test stress using allocator..." << endl;
         Stress(false);
         cout << endl;
-        // cout << "============================== Test alignment..." << endl;
-        // TestAlignment();
-        // cout << endl;
-        // cout << "============================== Test free empty pages 1..." << endl;
-        // TestFreeEmptyPages1();
-        // cout << endl;
-        // cout << "============================== Test free empty pages 2..." << endl;
-        // TestFreeEmptyPages2();
-        // cout << endl;
-        // cout << "============================== Test free empty pages 3..." << endl;
-        // TestFreeEmptyPages3(); 
-        // cout << endl;
+        cout << "============================== Test alignment..." << endl;
+        TestAlignment();
+        cout << endl;
+        cout << "============================== Test free empty pages 1..." << endl;
+        TestFreeEmptyPages1();
+        cout << endl;
+        cout << "============================== Test free empty pages 2..." << endl;
+        TestFreeEmptyPages2();
+        cout << endl;
+        cout << "============================== Test free empty pages 3..." << endl;
+        TestFreeEmptyPages3(); 
+        cout << endl;
         break;
     }
 
