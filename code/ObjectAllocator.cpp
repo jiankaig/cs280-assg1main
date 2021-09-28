@@ -73,11 +73,16 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 		+ config_.PadBytes_ * 2 * config_.ObjectsPerPage_
 		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_)
 		+ config_.LeftAlignSize_ + (config_.ObjectsPerPage_ - 1) * config_.InterAlignSize_;
-	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
 	
-	sizeof_LeftmostBlock = sizeof(void*) + config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.LeftAlignSize_;
-	sizeof_InnerBlock = stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.InterAlignSize_;
+	sizeof_LeftmostBlock = sizeof_LeftmostBlock + config_.LeftAlignSize_;
+	sizeof_InnerBlock = sizeof_InnerBlock + config_.InterAlignSize_;
 
+	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
+
+	if(config_.UseCPPMemManager_){
+		// use normal new/delete..
+		return;
+	}
 	if(!config_.UseCPPMemManager_){
 		// create if not using standard new/delete
 		lowerBoundary = CreateAPage();
@@ -93,6 +98,7 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
  * @brief Destroy the Object Allocator:: Object Allocator object
  */
 ObjectAllocator::~ObjectAllocator(){
+	delete OAException_;
 	if(config_.UseCPPMemManager_)
 		return;
 	GenericObject* ptrToPage = PageList_;
@@ -101,7 +107,7 @@ ObjectAllocator::~ObjectAllocator(){
 		ptrToPage = PageList_->Next;
 		delete [] PageList_;
 	}
-	
+
 }	
 
 /**
@@ -176,6 +182,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 			ptrHbExternal->label = const_cast<char *>(label);
 			ptrHbExternal->alloc_num = static_cast<unsigned int>(AllocNum);
 			*(reinterpret_cast<MemBlockInfo **>(ptrToHeaderBlock)) = ptrHbExternal;
+			//delete [] ptrHbExternal;
 		}
 		else if(config_.HBlockInfo_.type_ == OAConfig::hbBasic){
 			// Assign Basic header
@@ -274,6 +281,10 @@ void ObjectAllocator::Free(void *Object){
 			ptrToAllocNum = ptrToHeaderBlock;
 			BytesInBasicBlock = config_.HBlockInfo_.size_;
 		}
+		if(config_.HBlockInfo_.type_ == OAConfig::hbExternal){
+			delete [] *reinterpret_cast<MemBlockInfo**>(ptrToHeaderBlock);
+		}
+
 		memset(ptrToAllocNum, ZERO_PATTERN, BytesInBasicBlock);
 		char* ptrToFreedPatternArea = reinterpret_cast<char*>(FreeList_) + sizeof(void*);
 		memset(ptrToFreedPatternArea, FREED_PATTERN, stats_.ObjectSize_-sizeof(void*));
@@ -420,8 +431,23 @@ unsigned ObjectAllocator::FreeEmptyPages(){
 			//base case, re-point PageList if first page is to be deleted
 			PageList_ = ptrToPage;
 		}
-		if(!PageToDelete) //delete page if NULL
-			delete [] PageToDelete;
+		
+		//delete header block first...
+		if (config_.HBlockInfo_.type_ == OAConfig::hbExternal) {
+				MemBlockInfo* ptrToHeaderBlock = reinterpret_cast<MemBlockInfo* >(reinterpret_cast<char *>(PageToDelete) 
+											+ sizeof(void *) + config_.LeftAlignSize_);
+
+				for (unsigned i=0; i < config_.ObjectsPerPage_; ++i) {
+					MemBlockInfo *HBToDelete = ptrToHeaderBlock;
+					ptrToHeaderBlock = reinterpret_cast<MemBlockInfo *>(reinterpret_cast<char*>(ptrToHeaderBlock) + sizeof_InnerBlock);
+					delete HBToDelete->label;
+					delete HBToDelete;
+					
+				}
+		}
+		if(PageToDelete) {//delete page if NULL
+			delete[] PageToDelete;
+		}
 		PageToDelete = NULL;
 	}
 
@@ -529,6 +555,8 @@ void ObjectAllocator::ComputeAlignment() {
 	// compute left alignment
 	if(static_cast<unsigned int>(sizeof_LeftmostBlock)% config_.Alignment_ != 0) 
 		config_.LeftAlignSize_ = config_.Alignment_ - (static_cast<unsigned int>(sizeof_LeftmostBlock) % config_.Alignment_);
+	else
+		config_.LeftAlignSize_ = 0;
 
 	// compute inter alignment 
 	if(static_cast<unsigned int>(sizeof_InnerBlock) % config_.Alignment_ != 0)
@@ -697,3 +725,4 @@ bool ObjectAllocator::isPageEmpty(void* ptrToPage) const{
 	}
 	return false;
 }
+

@@ -25,7 +25,7 @@
  * 
  *    Private methods include:
  *      checkObjectForPattern
- * 		ComputeAlign_
+ * 		ComputeAlignment
  *      CreateAPage
  *      FindPageByObject
  *      isPadCorrupted
@@ -34,6 +34,7 @@
  *    Specific portions that gave you the most trouble: optimisation of free.
  * @version 0.1 20 tests run/16 tests passed
  * @version 0.2 20 tests run/19 tests passed
+ * @version 0.3 20 tests run/20 tests passed
  * @date 2021-09-26
  * 
  * @copyright Copyright (c) 2021
@@ -63,18 +64,25 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
 	FreeList_ = NULL;
 	PageList_ = NULL;
 
-	ComputeAlign_();
-	
 	stats_.ObjectSize_ = ObjectSize;
+	sizeof_LeftmostBlock = sizeof(void*) + config_.PadBytes_ + config_.HBlockInfo_.size_;
+	sizeof_InnerBlock = stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_;
+	ComputeAlignment();
+	
 	stats_.PageSize_ = sizeof(void*) + static_cast<size_t>(config.ObjectsPerPage_) * ObjectSize 
 		+ config_.PadBytes_ * 2 * config_.ObjectsPerPage_
 		+ config_.HBlockInfo_.size_ * (config_.ObjectsPerPage_)
 		+ config_.LeftAlignSize_ + (config_.ObjectsPerPage_ - 1) * config_.InterAlignSize_;
-	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
 	
-	sizeof_LeftmostBlock = sizeof(void*) + config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.LeftAlignSize_;
-	sizeof_InnerBlock = stats_.ObjectSize_ + 2*config_.PadBytes_ + config_.HBlockInfo_.size_ + config_.InterAlignSize_;
+	sizeof_LeftmostBlock = sizeof_LeftmostBlock + config_.LeftAlignSize_;
+	sizeof_InnerBlock = sizeof_InnerBlock + config_.InterAlignSize_;
 
+	OAException_ = new OAException(OAException::E_BAD_BOUNDARY, "A message returned by the what method.");
+
+	if(config_.UseCPPMemManager_){
+		// use normal new/delete..
+		return;
+	}
 	if(!config_.UseCPPMemManager_){
 		// create if not using standard new/delete
 		lowerBoundary = CreateAPage();
@@ -90,6 +98,7 @@ ObjectAllocator::ObjectAllocator(size_t ObjectSize, const OAConfig& config)
  * @brief Destroy the Object Allocator:: Object Allocator object
  */
 ObjectAllocator::~ObjectAllocator(){
+	delete OAException_;
 	if(config_.UseCPPMemManager_)
 		return;
 	GenericObject* ptrToPage = PageList_;
@@ -98,7 +107,7 @@ ObjectAllocator::~ObjectAllocator(){
 		ptrToPage = PageList_->Next;
 		delete [] PageList_;
 	}
-	
+
 }	
 
 /**
@@ -173,6 +182,7 @@ void* ObjectAllocator::Allocate(const char *label) {
 			ptrHbExternal->label = const_cast<char *>(label);
 			ptrHbExternal->alloc_num = static_cast<unsigned int>(AllocNum);
 			*(reinterpret_cast<MemBlockInfo **>(ptrToHeaderBlock)) = ptrHbExternal;
+			//delete [] ptrHbExternal;
 		}
 		else if(config_.HBlockInfo_.type_ == OAConfig::hbBasic){
 			// Assign Basic header
@@ -271,6 +281,10 @@ void ObjectAllocator::Free(void *Object){
 			ptrToAllocNum = ptrToHeaderBlock;
 			BytesInBasicBlock = config_.HBlockInfo_.size_;
 		}
+		if(config_.HBlockInfo_.type_ == OAConfig::hbExternal){
+			delete [] *reinterpret_cast<MemBlockInfo**>(ptrToHeaderBlock);
+		}
+
 		memset(ptrToAllocNum, ZERO_PATTERN, BytesInBasicBlock);
 		char* ptrToFreedPatternArea = reinterpret_cast<char*>(FreeList_) + sizeof(void*);
 		memset(ptrToFreedPatternArea, FREED_PATTERN, stats_.ObjectSize_-sizeof(void*));
@@ -417,8 +431,23 @@ unsigned ObjectAllocator::FreeEmptyPages(){
 			//base case, re-point PageList if first page is to be deleted
 			PageList_ = ptrToPage;
 		}
-		if(!PageToDelete) //delete page if NULL
-			delete [] PageToDelete;
+		
+		//delete header block first...
+		if (config_.HBlockInfo_.type_ == OAConfig::hbExternal) {
+				MemBlockInfo* ptrToHeaderBlock = reinterpret_cast<MemBlockInfo* >(reinterpret_cast<char *>(PageToDelete) 
+											+ sizeof(void *) + config_.LeftAlignSize_);
+
+				for (unsigned i=0; i < config_.ObjectsPerPage_; ++i) {
+					MemBlockInfo *HBToDelete = ptrToHeaderBlock;
+					ptrToHeaderBlock = reinterpret_cast<MemBlockInfo *>(reinterpret_cast<char*>(ptrToHeaderBlock) + sizeof_InnerBlock);
+					delete HBToDelete->label;
+					delete HBToDelete;
+					
+				}
+		}
+		if(PageToDelete) {//delete page if NULL
+			delete[] PageToDelete;
+		}
 		PageToDelete = NULL;
 	}
 
@@ -515,35 +544,25 @@ bool ObjectAllocator::checkObjectForPattern(void* ptrToBlock, const unsigned cha
 }
 
 /**
- * @fn void ObjectAllocator::ComputeAlign_()
+ * @fn void ObjectAllocator::ComputeAlignment()
  * @brief 
  * 		This helper function helps to compute the alignment of the memory block.
  */
-void ObjectAllocator::ComputeAlign_() {
-  // return if there is no alignment
-  if (config_.Alignment_ == 0) return;
+void ObjectAllocator::ComputeAlignment() {
+	// return if there is no alignment
+	if (config_.Alignment_ == 0) return;
 
-  // compute data size for left alignment
-  size_t inSize =
-      sizeof(GenericObject *) + config_.HBlockInfo_.size_ + config_.PadBytes_;
-  size_t mod = (inSize % config_.Alignment_);
+	// compute left alignment
+	if(static_cast<unsigned int>(sizeof_LeftmostBlock)% config_.Alignment_ != 0) 
+		config_.LeftAlignSize_ = config_.Alignment_ - (static_cast<unsigned int>(sizeof_LeftmostBlock) % config_.Alignment_);
+	else
+		config_.LeftAlignSize_ = 0;
 
-  if (mod == 0 || inSize <= config_.Alignment_) return;
-
-  // compute left alignment if inSize is greater and not
-  // multiples of alignment size
-  config_.LeftAlignSize_ = config_.Alignment_ - static_cast<unsigned int>(mod);
-
-  // compute data size for inter alignment
-  inSize = stats_.ObjectSize_ + 2 * config_.PadBytes_ +
-           config_.HBlockInfo_.size_;
-  mod = (inSize % config_.Alignment_);
-
-  if (mod == 0 || inSize <= config_.Alignment_) return;
-
-  // compute inter alignment if inSize is greater and not
-  // multiples of alignment size
-  config_.InterAlignSize_ = config_.Alignment_ - static_cast<unsigned int>(mod);
+	// compute inter alignment 
+	if(static_cast<unsigned int>(sizeof_InnerBlock) % config_.Alignment_ != 0)
+		config_.InterAlignSize_ = config_.Alignment_ - (static_cast<unsigned int>(sizeof_InnerBlock) % config_.Alignment_);
+	else
+		config_.InterAlignSize_ = 0;
 }
 
 /**
@@ -706,3 +725,4 @@ bool ObjectAllocator::isPageEmpty(void* ptrToPage) const{
 	}
 	return false;
 }
+

@@ -331,7 +331,6 @@ class ObjectAllocator
     bool checkObjectForPattern(void* ptrToBlock, const unsigned char pattern) const;
     bool isPageEmpty(void* ptrToPage) const;
     
-
 };
 
 #endif
